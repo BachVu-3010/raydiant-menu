@@ -1,0 +1,71 @@
+{
+  "private": "true",
+  "name": "raydiant-menu",
+  "version": "1.0.0",
+  "description": "React Menu Component for Raydiant Menu apps",
+  "main": "index.js",
+  "repository": "https://github.com/mirainc/raydiant-menu",
+  "author": "mirainc",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && styleguidist server --config styleguide.config.js",
+    "tsc": "tsc",
+    "build": "tsc && copyfiles -u 2 src/lib/**/*.css build/lib && node tasks/copy-package-json.js",
+    "build:watch": "tsc -w",
+    "build:link": "yarn build && cd build/lib && yarn unlink && yarn link",
+    "lint": "tslint --project .",
+    "test": "jest src --env=jsdom --watch",
+    "deploy": "sh tasks/npm-publish.sh",
+    "styleguide:build": "tsc && styleguidist build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/enzyme": "^3.1.13",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/jest": "^23.3.2",
+    "@types/react": "16.7.6",
+    "@types/react-dom": "16.0.7",
+    "copyfiles": "^2.0.0",
+    "css-loader": "^1.0.0",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "fs-extra": "^7.0.0",
+    "husky": "^0.14.3",
+    "jest": "^23.5.0",
+    "jest-enzyme": "^6.0.4",
+    "lint-staged": "^7.2.0",
+    "prettier": "^1.14.2",
+    "react": "16.8.0",
+    "react-docgen-typescript": "^1.9.1",
+    "react-dom": "16.8.0",
+    "react-styleguidist": "^7.3.8",
+    "should": "^13.2.3",
+    "style-loader": "^0.22.1",
+    "ts-jest": "^23.1.4",
+    "ts-loader": "^4.4.2",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.14.0",
+    "tslint-eslint-rules": "^5.3.1",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.0.1",
+    "webpack": "^4.16.5"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "rootDir": "src",
+    "setupFiles": [
+      "<rootDir>/setupTests.ts"
+    ]
+  }
+}

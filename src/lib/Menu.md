@@ -1,0 +1,3 @@
+```js
+<Menu message='Hello'/>
+```
