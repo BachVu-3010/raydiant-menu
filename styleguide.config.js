@@ -2,15 +2,17 @@ const path = require('path');
 
 module.exports = {
   title: 'Raydiant Menu',
+  components: 'src/lib/**/[A-Z]*.tsx',
   theme: {
     maxWidth: 'none',
   },
   pagePerSection: true,
   sections: [
     {
-      name: 'Menu',
+      name: 'MenuLayout',
       components: () => [
-        path.join(__dirname, 'src', 'lib', 'Menu.tsx')
+        path.join(__dirname, 'src', 'lib', 'Layout', 'Layout.tsx'),
+        path.join(__dirname, 'src', 'styleguide', 'components', 'Preview.tsx'),
       ],
     },
   ],
