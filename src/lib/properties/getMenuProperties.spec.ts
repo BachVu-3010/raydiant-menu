@@ -16,7 +16,6 @@ describe('getMenuProperties', () => {
       'enableAnimation',
       'footnote',
       'footnoteSize',
-      'outOfStockAction',
       'theme',
       'qrActive',
       'qrSource',
@@ -194,25 +193,6 @@ describe('getMenuProperties', () => {
         })
       );
       properties.footnoteSize.hide.should.be.false();
-    });
-  });
-
-  describe('outOfStockAction', () => {
-    it('should have correct attributes', () => {
-      const properties = toPlainObject(getMenuProperties(presentation));
-      properties.outOfStockAction.should.eql({
-        label: 'out of stock items',
-        type: 'toggleButtonGroup',
-        optional: true,
-        constraints: {},
-        options: [
-          { label: 'Leave it', value: 'LEAVE_IT' },
-          { label: 'Remove', value: 'REMOVE' },
-          { label: 'Strikethrough', value: 'STRIKETHROUGH' },
-        ],
-        default: 'LEAVE_IT',
-        exclusive: true,
-      });
     });
   });
 

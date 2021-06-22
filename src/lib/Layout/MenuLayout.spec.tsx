@@ -27,11 +27,6 @@ describe('MenuLayout', () => {
       ]),
     ];
     const onReady = spy();
-    const textSizeDependencies = {
-      theme: {},
-      layout: 'default',
-      filteredCategories: categories,
-    };
     const wrapper = mount(
       <ThemeProvider theme={createTheme({}, false)}>
         <MenuLayout
@@ -41,7 +36,6 @@ describe('MenuLayout', () => {
           layoutMode='default'
           categories={categories}
           onReady={onReady}
-          textSizeDependencies={textSizeDependencies}
         />
       </ThemeProvider>
     );
@@ -61,7 +55,6 @@ describe('MenuLayout', () => {
       });
       layout.prop('categories').should.equal(categories);
       layout.prop('qr').should.equal(qr);
-      layout.prop('textSizeDependencies').should.equal(textSizeDependencies);
 
       window.Image = RealImage;
       done();

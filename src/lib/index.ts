@@ -1,4 +1,4 @@
-import MenuLayout from './Layout';
+import MenuLayout from './Layout/MenuLayout';
 import withMenu from './withMenu';
 import Theme from './themes/createTheme';
 import * as Types from './types';

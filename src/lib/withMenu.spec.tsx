@@ -6,7 +6,7 @@ import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
 import withMenu from './withMenu';
-import { AppProps, QRPoperties } from './types';
+import { AppProps, Presentation, QRPoperties } from './types';
 
 describe('withMenu', () => {
   let WebFontLoadStub: sinon.SinonStub;
@@ -32,18 +32,37 @@ describe('withMenu', () => {
 
   it('should wrap AppComponent element into a ThemeProvider', () => {
     const onError = sinon.spy();
+    const onReady = sinon.spy();
+    const presentation: Presentation = {
+      theme: {
+        headingFont: 'http://lvh.me/heading-font.woff',
+        heading2Font: 'http://lvh.me/heading2-font.woff',
+        bodyFont: 'http://lvh.me/body-font.woff',
+      },
+      values: {
+        shouldFormatPrice: true,
+        priceFormat: 'integer-format',
+        currency: '$',
+        image: { url: 'https://lvh.me/image-url' },
+        layout: 'flip',
+        enableAnimation: true,
+        footnote: 'Custom Footnote',
+        footnoteSize: 'large',
+        qrActive: true,
+        qrSource: 'haveQRCode',
+        qrUrlContent: 'http://lvh.me/test-qr-url',
+        qrImage: { url: 'http://lvh.me/test-qr-image-url' },
+        qrSize: 'small',
+        qrCallToAction: 'Call To Action',
+      },
+    };
     const wrapper = mount(
       <ComponentWithMenu
-        presentation={{
-          theme: {
-            headingFont: 'http://lvh.me/heading-font.woff',
-            heading2Font: 'http://lvh.me/heading2-font.woff',
-            bodyFont: 'http://lvh.me/body-font.woff',
-          },
-          values: { qrActive: false },
-        }}
+        presentation={presentation}
         onError={onError}
+        onReady={onReady}
         anotherProp='some other prop should be passed into AppComponent'
+        isPlaying={true}
       />
     );
 
@@ -54,19 +73,28 @@ describe('withMenu', () => {
 
     const themeProvider = wrapper.find(ThemeProvider);
     const content = themeProvider.find(TestComponent);
-    content.props().should.eql({
-      presentation: {
-        theme: {
-          headingFont: 'http://lvh.me/heading-font.woff',
-          heading2Font: 'http://lvh.me/heading2-font.woff',
-          bodyFont: 'http://lvh.me/body-font.woff',
-        },
-        values: { qrActive: false },
-      },
-      qr: null,
-      onError,
+    content.prop('presentation').should.eql(presentation);
+    content.prop('onError').should.equal(onError);
+    content.prop('anotherProp').should.equal('some other prop should be passed into AppComponent');
+    content.prop('menuProps').should.eql({
+      imageUrl: 'https://lvh.me/image-url',
       fontsLoaded: true,
-      anotherProp: 'some other prop should be passed into AppComponent',
+      qr: {
+        url: 'http://lvh.me/test-qr-image-url',
+        size: 'small',
+        callToAction: 'Call To Action',
+      },
+      layoutMode: 'flip',
+      footnote: 'Custom Footnote',
+      footnoteSize: 'large',
+      animate: true,
+      enableAnimation: true,
+      onReady,
+      priceFormatConfig: {
+        shouldFormatPrice: true,
+        currency: '$',
+        priceFormat: 'integer-format',
+      },
     });
   });
 
@@ -139,7 +167,9 @@ describe('withMenu', () => {
 
     WebFontLoadStub.should.be.calledOnce();
 
-    wrapper.find(TestComponent).prop('fontsLoaded').should.be.false();
+    wrapper.find(TestComponent).prop('menuProps').should.containEql({
+      fontsLoaded: false,
+    });
 
     const fontLoadingConfig = WebFontLoadStub.getCalls()[0].args[0];
     fontLoadingConfig.custom.should.eql({
@@ -155,11 +185,13 @@ describe('withMenu', () => {
     wrapper.update();
 
     const testComponent = wrapper.find(TestComponent);
-    testComponent.prop('fontsLoaded').should.be.true();
-    testComponent.prop('qr').should.eql({
-      url: 'http://lvh.me/test-qr-image-url',
-      size: 'small',
-      callToAction: 'Call To Action'
+    testComponent.prop('menuProps').should.containEql({ fontsLoaded: true });
+    testComponent.prop('menuProps').should.containEql({
+      qr: {
+        url: 'http://lvh.me/test-qr-image-url',
+        size: 'small',
+        callToAction: 'Call To Action'
+      },
     });
   });
 

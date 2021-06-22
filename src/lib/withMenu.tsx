@@ -6,18 +6,19 @@ import createTheme from './themes/createTheme';
 import useDeepMemo from './utils/useDeepMemo';
 import useQRCode from './useQrCode';
 import { QR, AppProps } from './types';
+import { MenuLayoutProps } from './Layout/MenuLayout';
 
 interface AdditionalProps {
-  fontsLoaded: boolean;
-  qr: QR;
+  menuProps: MenuLayoutProps,
 }
 
 export default function withMenu<OriginalProps extends AppProps>(
   Component: React.ComponentType<OriginalProps & AdditionalProps>,
 ): React.FC<OriginalProps> {
   const WrappedComponent: React.FC<OriginalProps> = props => {
-    const { presentation, onError } = props;
+    const { presentation, onError, onReady, isPlaying } = props;
     const { theme: themeData = {}, values } = presentation;
+    const { shouldFormatPrice, currency, priceFormat, image, layout, enableAnimation, footnote, footnoteSize } = values;
 
     const [isPortrait, setIsPortrait] = React.useState(window.innerWidth <= window.innerHeight);
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
@@ -53,13 +54,41 @@ export default function withMenu<OriginalProps extends AppProps>(
 
     const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
     const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
+    const priceFormatConfig = React.useMemo(() => ({ shouldFormatPrice, currency, priceFormat }), [
+      shouldFormatPrice,
+      currency,
+      priceFormat,
+    ]);
+    const menuProps = React.useMemo(() => ({
+      imageUrl: image && image.url,
+      fontsLoaded,
+      qr,
+      layoutMode: layout,
+      footnote,
+      footnoteSize,
+      animate: isPlaying,
+      enableAnimation,
+      onReady,
+      priceFormatConfig,
+    }), [
+      fontsLoaded,
+      qr,
+      layout,
+      footnote,
+      footnoteSize,
+      isPlaying,
+      enableAnimation,
+      onReady,
+      priceFormatConfig,
+      image,
+    ]);
 
     return (
       <ThemeProvider theme={theme}>
         {theme.globalStyles.map((globalStyle, index) => (
           <Global key={index} styles={globalStyle} />
         ))}
-        <Component {...props} qr={qr} fontsLoaded={fontsLoaded} />
+        <Component {...props} menuProps={menuProps} />
       </ThemeProvider>
     );
   };

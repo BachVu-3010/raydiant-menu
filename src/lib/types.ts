@@ -84,12 +84,11 @@ interface ValuesProps extends QRPoperties {
   shouldFormatPrice?: boolean;
   currency?: string;
   priceFormat?: string;
+  image?: { url?: string; };
   layout?: LayoutMode;
   enableAnimation?: boolean;
   footnote?: string;
   footnoteSize?: Size;
-  outOfStockAction?: 'LEAVE_IT' | 'REMOVE' | 'STRIKETHROUGH';
-  image?: object;
 }
 
 export interface Presentation {
@@ -100,4 +99,6 @@ export interface Presentation {
 export interface AppProps {
   presentation: Presentation;
   onError?: (error: Error) => void;
+  onReady?: () => void;
+  isPlaying?: boolean,
 }

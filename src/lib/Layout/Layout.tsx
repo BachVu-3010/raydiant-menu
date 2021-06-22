@@ -17,10 +17,15 @@ export interface LayoutProps {
   animate?: boolean;
   enableAnimation?: boolean;
   onReady?: () => void;
-  textSizeDependencies?: object;
   priceFormatConfig?: PriceFormatConfig;
   footnote?: string;
   footnoteSize?: Size;
+}
+
+interface TextSizeDependencies {
+  theme: Theme,
+  layoutMode: LayoutMode,
+  categories: Category[],
 }
 
 const Layout: React.FC<LayoutProps> = ({
@@ -33,11 +38,15 @@ const Layout: React.FC<LayoutProps> = ({
   animate,
   enableAnimation,
   onReady,
-  textSizeDependencies,
   priceFormatConfig,
 }) => {
   const theme: Theme = useTheme();
   const isLandscape = !(theme && theme.isPortrait);
+  const textSizeDependencies: TextSizeDependencies = React.useMemo(() => ({ theme, layoutMode, categories }), [
+    theme,
+    layoutMode,
+    categories,
+  ]);
   const layout = React.useMemo(() => getFlyersLayout(isLandscape, image, qr, layoutMode), [
     isLandscape,
     image,

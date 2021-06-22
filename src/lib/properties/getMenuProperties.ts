@@ -38,12 +38,6 @@ export default (presentation: Presentation) => {
       .default('small')
       .exclusive()
       .hide(!selectedFootnote),
-    outOfStockAction: PropTypes.toggleButtonGroup('out of stock items')
-      .exclusive()
-      .option('LEAVE_IT', 'Leave it')
-      .option('REMOVE', 'Remove')
-      .option('STRIKETHROUGH', 'Strikethrough')
-      .default('LEAVE_IT'),
     theme: PropTypes.theme(),
     ...getQRCodeProperties(presentation),
   };

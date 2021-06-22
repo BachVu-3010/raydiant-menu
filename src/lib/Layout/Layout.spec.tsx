@@ -23,20 +23,15 @@ describe('Layout', () => {
       ]),
     ];
     const onReady = spy();
-    const textSizeDependencies = {
-      theme: {},
-      layout: 'default',
-      filteredCategories: categories,
-    };
+    const theme = createTheme({}, false);
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({}, false)}>
+      <ThemeProvider theme={theme}>
         <Layout
           image={image}
           qr={qr}
           layoutMode='default'
           categories={categories}
           onReady={onReady}
-          textSizeDependencies={textSizeDependencies}
         />
       </ThemeProvider>
     );
@@ -67,7 +62,7 @@ describe('Layout', () => {
     calculateTextLayout.prop('height').should.equal(968);
     calculateTextLayout.prop('maxColumns').should.equal(4);
     calculateTextLayout.prop('onCalculated').should.equal(onReady);
-    calculateTextLayout.prop('textSizeDependencies').should.equal(textSizeDependencies);
+    calculateTextLayout.prop('textSizeDependencies').should.containEql({ layoutMode: 'default', categories });
 
     const columns = calculateTextLayout.find(Columns);
     columns.prop('categories').should.eql(categories);
@@ -83,20 +78,15 @@ describe('Layout', () => {
       ]),
     ];
     const onReady = spy();
-    const textSizeDependencies = {
-      theme: {},
-      layout: 'default',
-      filteredCategories: categories,
-    };
+    const theme = createTheme({}, true);
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({}, true)}>
+      <ThemeProvider theme={theme}>
         <Layout
           image={image}
           qr={qr}
           layoutMode='default'
           categories={categories}
           onReady={onReady}
-          textSizeDependencies={textSizeDependencies}
         />
       </ThemeProvider>
     );
@@ -127,7 +117,7 @@ describe('Layout', () => {
     calculateTextLayout.prop('height').should.equal(925);
     calculateTextLayout.prop('maxColumns').should.equal(4);
     calculateTextLayout.prop('onCalculated').should.equal(onReady);
-    calculateTextLayout.prop('textSizeDependencies').should.equal(textSizeDependencies);
+    calculateTextLayout.prop('textSizeDependencies').should.containEql({ layoutMode: 'default', categories });
 
     const columns = calculateTextLayout.find(Columns);
     columns.prop('categories').should.eql(categories);

@@ -50,30 +50,20 @@ initialState = {
   qrActive: false,
 };
 
-const App = withMenu(({presentation, qr, fontsLoaded}) => {
-  const { imageUrl, categories } = presentation.values;
+const App = withMenu(({ presentation, menuProps }) => {
+  const { categories } = presentation.values;
   return (
     <MenuLayout
-      imageUrl={imageUrl}
-      fontsLoaded={fontsLoaded}
-      layoutMode='default'
       categories={categories}
-      onReady={() => { 
-        console.warn('onReady');
-      }}
-      qr={qr}
-      priceFormatConfig={{
-        shouldFormatPrice: true,
-        currency: '$',
-        priceFormat: PRICE_FORMATS.FLOAT_2.value,
-      }}
+      {...menuProps}
     />
   );
 });
 
 const createPresentation = (themeVars, qrActive, imageUrl) => ({
   values: {
-    imageUrl,
+    layoutMode: 'default',
+    image: { url: imageUrl },
     categories: createCategories(10),
     qrActive,
     qrSource: 'needQRCode',
@@ -87,7 +77,14 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
 <div style={{ width: '100%' }}>
   <Preview App={App} vertical={state.vertical} >
     {
-      (themeVars, imageUrl) => (<App presentation={createPresentation(themeVars, state.qrActive, imageUrl)} />)
+      (themeVars, imageUrl) => (
+        <App 
+          presentation={createPresentation(themeVars, state.qrActive, imageUrl)} 
+          onReady={() => { 
+            console.warn('onReady');
+          }}
+        />
+      )
     }
   </Preview>
   <h2>
