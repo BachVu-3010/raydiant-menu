@@ -2,26 +2,22 @@ import React from 'react';
 import * as WebFont from 'webfontloader';
 import { ThemeProvider, Global } from '@emotion/react';
 
-import createTheme, { ThemeVars } from './createTheme';
-import useDeepMemo from '../utils/useDeepMemo';
+import createTheme from './themes/createTheme';
+import useDeepMemo from './utils/useDeepMemo';
+import useQRCode from './useQrCode';
+import { QR, AppProps } from './types';
 
 interface AdditionalProps {
   fontsLoaded: boolean;
+  qr: QR;
 }
 
-export interface WrappedComponentBaseProps {
-  presentation: {
-    theme: ThemeVars;
-  };
-  onError?: (error: Error) => void;
-}
-
-export default function withThemeSelector<OriginalProps extends WrappedComponentBaseProps>(
+export default function withMenu<OriginalProps extends AppProps>(
   Component: React.ComponentType<OriginalProps & AdditionalProps>,
-): React.SFC<OriginalProps> {
-  const WrappedComponent: React.SFC<OriginalProps> = props => {
+): React.FC<OriginalProps> {
+  const WrappedComponent: React.FC<OriginalProps> = props => {
     const { presentation, onError } = props;
-    const { theme: themeData = {} } = presentation;
+    const { theme: themeData = {}, values } = presentation;
 
     const [isPortrait, setIsPortrait] = React.useState(window.innerWidth <= window.innerHeight);
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
@@ -55,12 +51,15 @@ export default function withThemeSelector<OriginalProps extends WrappedComponent
       });
     }, [theme.toLoadFonts, onError]);
 
+    const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
+    const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
+
     return (
       <ThemeProvider theme={theme}>
         {theme.globalStyles.map((globalStyle, index) => (
           <Global key={index} styles={globalStyle} />
         ))}
-        <Component {...props} fontsLoaded={fontsLoaded} />
+        <Component {...props} qr={qr} fontsLoaded={fontsLoaded} />
       </ThemeProvider>
     );
   };

@@ -1,5 +1,5 @@
 ```js
-const withTheme = require('../themes/withTheme').default;
+const withMenu = require('../withMenu').default;
 const PRICE_FORMATS = require('../constants').PRICE_FORMATS;
 const createCategories = (numOfExtraCategories) => [
   {
@@ -47,16 +47,21 @@ const createCategories = (numOfExtraCategories) => [
 
 initialState = {
   vertical: false,
+  qrActive: false,
 };
 
-const App = withTheme(() => {
+const App = withMenu(({presentation, qr, fontsLoaded}) => {
+  const { imageUrl, categories } = presentation.values;
   return (
-    <Layout
+    <MenuLayout
+      imageUrl={imageUrl}
+      fontsLoaded={fontsLoaded}
       layoutMode='default'
-      categories={createCategories(10)}
+      categories={categories}
       onReady={() => { 
         console.warn('onReady');
       }}
+      qr={qr}
       priceFormatConfig={{
         shouldFormatPrice: true,
         currency: '$',
@@ -66,13 +71,36 @@ const App = withTheme(() => {
   );
 });
 
+const createPresentation = (themeVars, qrActive, imageUrl) => ({
+  values: {
+    imageUrl,
+    categories: createCategories(10),
+    qrActive,
+    qrSource: 'needQRCode',
+    qrUrlContent: 'http://lvh.me/test-qr-url',
+    qrSize: 'small',
+    qrCallToAction: 'Call To Action',
+  },
+  theme: themeVars,
+});
+
 <div style={{ width: '100%' }}>
-  <Preview App={App} vertical={state.vertical}/>
+  <Preview App={App} vertical={state.vertical} >
+    {
+      (themeVars, imageUrl) => (<App presentation={createPresentation(themeVars, state.qrActive, imageUrl)} />)
+    }
+  </Preview>
   <h2>
-    <input type='checkbox' value={state.vertical} onChange={(event) => {
-      setState({vertical: event.target.checked});
+    <input id='vertical' type='checkbox' value={state.vertical} onChange={(event) => {
+      setState(state => ({ ...state, vertical: !state.vertical}));
     }} />
     Vertical?
+  </h2>
+  <h2>
+    <input id='qr' type='checkbox' value={state.qrActive} onChange={(event) => {
+      setState(state => ({ ...state, qrActive: !state.qrActive}));
+    }} />
+    QR Code?
   </h2>
 </div>
 ```

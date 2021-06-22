@@ -5,9 +5,10 @@ import WebFont from 'webfontloader';
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
-import withTheme, { WrappedComponentBaseProps } from './withTheme';
+import withMenu from './withMenu';
+import { AppProps, QRPoperties } from './types';
 
-describe('withTheme', () => {
+describe('withMenu', () => {
   let WebFontLoadStub: sinon.SinonStub;
 
   beforeAll(() => {
@@ -22,23 +23,24 @@ describe('withTheme', () => {
     WebFontLoadStub.reset();
   });
   
-  interface TestComponentProps extends WrappedComponentBaseProps {
+  interface TestComponentProps extends AppProps {
     anotherProp?: string;
   }
   const TestComponent: React.FC<TestComponentProps> = 
     ({anotherProp}) => <div className='test--component'>{anotherProp}</div>;
-  const ComponentWithTheme = withTheme(TestComponent);
+  const ComponentWithMenu = withMenu(TestComponent);
 
   it('should wrap AppComponent element into a ThemeProvider', () => {
     const onError = sinon.spy();
     const wrapper = mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
             heading2Font: 'http://lvh.me/heading2-font.woff',
             bodyFont: 'http://lvh.me/body-font.woff',
           },
+          values: { qrActive: false },
         }}
         onError={onError}
         anotherProp='some other prop should be passed into AppComponent'
@@ -59,7 +61,9 @@ describe('withTheme', () => {
           heading2Font: 'http://lvh.me/heading2-font.woff',
           bodyFont: 'http://lvh.me/body-font.woff',
         },
+        values: { qrActive: false },
       },
+      qr: null,
       onError,
       fontsLoaded: true,
       anotherProp: 'some other prop should be passed into AppComponent',
@@ -68,13 +72,14 @@ describe('withTheme', () => {
 
   it('should inject font-face into global styles', () => {
     const wrapper = mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
             heading2Font: 'http://lvh.me/heading2-font.woff',
             bodyFont: 'http://lvh.me/body-font.woff',
           },
+          values: { qrActive: false },
         }}
       />
     );
@@ -109,15 +114,25 @@ describe('withTheme', () => {
       });
   });
 
-  it('should load fonts and render AppComponent with fontsLoaded prop', () => {
+  it('should load fonts and render AppComponent with fontsLoaded and qr prop', () => {
+    const presentationTheme = {
+      headingFont: 'http://lvh.me/heading-font.woff',
+      heading2Font: 'http://lvh.me/heading2-font.woff',
+      bodyFont: 'http://lvh.me/body-font.woff',
+    };
+    const qrProperties: QRPoperties = {
+      qrActive: true,
+      qrSource: 'haveQRCode',
+      qrUrlContent: 'http://lvh.me/test-qr-url',
+      qrImage: { url: 'http://lvh.me/test-qr-image-url' },
+      qrSize: 'small',
+      qrCallToAction: 'Call To Action',
+    };
     const wrapper = mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
-          theme: {
-            headingFont: 'http://lvh.me/heading-font.woff',
-            heading2Font: 'http://lvh.me/heading2-font.woff',
-            bodyFont: 'http://lvh.me/body-font.woff',
-          },
+          theme: presentationTheme,
+          values: qrProperties,
         }}
       />
     );
@@ -139,19 +154,26 @@ describe('withTheme', () => {
     act(() => fontLoadingConfig.active());
     wrapper.update();
 
-    wrapper.find(TestComponent).prop('fontsLoaded').should.be.true();
+    const testComponent = wrapper.find(TestComponent);
+    testComponent.prop('fontsLoaded').should.be.true();
+    testComponent.prop('qr').should.eql({
+      url: 'http://lvh.me/test-qr-image-url',
+      size: 'small',
+      callToAction: 'Call To Action'
+    });
   });
 
   it('should fire error if failed to load fonts', () => {
     const onError = sinon.spy();
     mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
             heading2Font: 'http://lvh.me/heading2-font.woff',
             bodyFont: 'http://lvh.me/body-font.woff',
           },
+          values: { qrActive: false },
         }}
         onError={onError}
       />
@@ -168,13 +190,14 @@ describe('withTheme', () => {
 
   it('should update theme and reload fonts when theme data is changed', () => {
     const wrapper = mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
             heading2Font: 'http://lvh.me/heading2-font.woff',
             bodyFont: 'http://lvh.me/body-font.woff',
           },
+          values: { qrActive: false },
         }}
         onError={sinon.spy()}
         anotherProp='some other prop should be passed into AppComponent'
@@ -197,6 +220,7 @@ describe('withTheme', () => {
           heading2Font: 'http://lvh.me/new-heading2-font.woff',
           bodyFont: 'http://lvh.me/new-body-font.woff',
         },
+        values: { qrActive: false },
       },
     });
 
@@ -212,13 +236,14 @@ describe('withTheme', () => {
 
   it('should not reload theme if theme vars are not deeply changed', () => {
     const wrapper = mount(
-      <ComponentWithTheme
+      <ComponentWithMenu
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
             heading2Font: 'http://lvh.me/heading2-font.woff',
             bodyFont: 'http://lvh.me/body-font.woff',
           },
+          values: { qrActive: false },
         }}
         onError={sinon.spy()}
         anotherProp='some other prop should be passed into AppComponent'
@@ -236,6 +261,7 @@ describe('withTheme', () => {
           heading2Font: 'http://lvh.me/heading2-font.woff',
           bodyFont: 'http://lvh.me/body-font.woff',
         },
+        values: { qrActive: false },
       },
     });
 

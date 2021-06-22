@@ -1,21 +1,10 @@
 import { CSSObject, GlobalProps } from '@emotion/react';
+
+import { ThemeVars } from '../types';
 import lineHighByFontSize from './lineHighByFontSize';
 
 export const vw1920 = (value: number) => `${(value * 100) / 1920}vw`;
 export const vw1080 = (value: number) => `${(value * 100) / 1080}vw`;
-
-export interface ThemeVars {
-  backgroundColor?: string;
-  backgroundImage?: string;
-  backgroundImagePortrait?: string;
-  headingFont?: string;
-  headingTextColor?: string;
-  heading2Font?: string;
-  heading2TextColor?: string;
-  bodyFont?: string;
-  borderColor?: string;
-  bodyTextColor?: string;
-}
 
 export interface TextStyles {
   fontFamily?: string;
@@ -25,12 +14,6 @@ export interface TextStyles {
 }
 
 export type TextStylesByFontSize = (fontSize?: number) => TextStyles;
-// interface FontFaceStyle {
-//   '@font-face': {
-//     fontFamily: string;
-//     src: string;
-//   }
-// }
 
 export interface Theme {
   isPortrait: boolean;

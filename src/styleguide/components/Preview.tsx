@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as themes from 'raydiant-kit/lib/themes';
-import { ThemeProvider } from '@emotion/react';
 
-import createTheme, { ThemeVars } from '../../lib/themes/createTheme';
+import { ThemeVars } from '../../lib/types';
 
 interface ThemeOption {
   name: string;
@@ -29,15 +28,10 @@ for (const [key, theme] of Object.entries(themes)) {
   });
 }
 
-interface AppProps {
-  presentation: {
-    theme: ThemeVars;
-  };
-}
-
-const Preview: React.FC<{ vertical: boolean, App: React.FC<AppProps> }> = ({ App, vertical = false }) => {
+const Preview: React.FC<{ vertical: boolean, children: (themeVars: ThemeVars, imageUrl?: string) => any }> = ({ children, vertical = false }) => {
   const [scale, setScale] = React.useState(null);
   const [theme, setTheme] = React.useState(themeOptions[0].value);
+  const [imageUrl, setImageUrl] = React.useState<string>('');
 
   const ref = React.useRef(null);
   const width = vertical ? 1080 : 1920;
@@ -63,7 +57,7 @@ const Preview: React.FC<{ vertical: boolean, App: React.FC<AppProps> }> = ({ App
           transformOrigin: 'top left',
           transform: `scale(${scale})`,
         }}>
-          { scale ? <App presentation={{ theme }} /> : null }
+          { scale ? children(theme, imageUrl) : null }
         </div>
       </div>
       <h2>Select theme</h2>
@@ -76,6 +70,10 @@ const Preview: React.FC<{ vertical: boolean, App: React.FC<AppProps> }> = ({ App
           ))
         }
       </select>
+      <h2>Input Image Url</h2>
+      <input type='string' value={imageUrl} onChange={(event) => {
+        setImageUrl(event.target.value);
+      }} />
     </div>
   );
 }

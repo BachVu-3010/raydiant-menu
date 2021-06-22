@@ -1,9 +1,13 @@
 import MenuLayout from './Layout';
-import withTheme from './themes/withTheme';
+import withMenu from './withMenu';
 import Theme from './themes/createTheme';
+import * as Types from './types';
+import getMenuProperties from './properties/getMenuProperties';
 
 export default MenuLayout;
 export {
-  withTheme,
-  Theme
+  withMenu,
+  Theme,
+  Types,
+  getMenuProperties,
 };

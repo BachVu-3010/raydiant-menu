@@ -42,6 +42,7 @@ export interface ImageData {
 export type Size = 'small' | 'medium' | 'large';
 export type LayoutMode = 'default' | 'flip';
 
+export type QRSource = 'needQRCode' | 'haveQRCode';
 export interface QR {
   url: string;
   size?: Size;
@@ -54,3 +55,49 @@ export interface OverScan {
   bottom: number;
   left: number
 } 
+
+export interface QRPoperties {
+  qrActive?: boolean;
+  qrSource?: QRSource;
+  qrUrlContent?: string;
+  qrImage?: {
+    url: string;
+  };
+  qrSize?: Size;
+  qrCallToAction?: string;
+}
+
+export interface ThemeVars {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  backgroundImagePortrait?: string;
+  headingFont?: string;
+  headingTextColor?: string;
+  heading2Font?: string;
+  heading2TextColor?: string;
+  bodyFont?: string;
+  borderColor?: string;
+  bodyTextColor?: string;
+}
+
+interface ValuesProps extends QRPoperties {
+  shouldFormatPrice?: boolean;
+  currency?: string;
+  priceFormat?: string;
+  layout?: LayoutMode;
+  enableAnimation?: boolean;
+  footnote?: string;
+  footnoteSize?: Size;
+  outOfStockAction?: 'LEAVE_IT' | 'REMOVE' | 'STRIKETHROUGH';
+  image?: object;
+}
+
+export interface Presentation {
+  theme: ThemeVars;
+  values: ValuesProps;
+}
+
+export interface AppProps {
+  presentation: Presentation;
+  onError?: (error: Error) => void;
+}

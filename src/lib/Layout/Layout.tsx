@@ -9,7 +9,7 @@ import ImageLayout from './ImageLayout';
 import usePriceFormatter, { PriceFormatConfig } from './usePriceFormatter';
 import { Category, ImageData, QR, Size, LayoutMode } from '../types';
 
-interface LayoutProps {
+export interface LayoutProps {
   image?: ImageData;
   qr?: QR;
   layoutMode?: LayoutMode,
