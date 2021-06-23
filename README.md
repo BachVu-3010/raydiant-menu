@@ -1,10 +1,12 @@
 Raydiant's React Menu component library for the Raydiant Menu apps.
 
 ## How to use
-#### Install
+### 1. Install raydiant-menu
 `yarn add raydiant-menu`
 
-#### Add Menu Properties
+**IMPORTANT** Make sure you are using react@16.8.0
+
+### 2. Add Menu Properties
 Your `getProperties.js` should look like this
 ```.js
 import { getMenuProperties } from 'raydiant-menu';
@@ -85,8 +87,9 @@ interface MenuProps {
 }
 ```
 
-## Installation
+## Development
 
+### Installation
 Use the version of Node.js specified in the `.nvmrc` file.
 
 If you're using `nvm` run `nvm install` & `nvm use` to install and use the correct version of Node.js.
@@ -95,12 +98,17 @@ If you're using `nvm` run `nvm install` & `nvm use` to install and use the corre
 yarn install
 ```
 
-## Development
-
+### Start styleguidist preview
 Run `yarn start` to start the [styleguidist](https://github.com/styleguidist/react-styleguidist) server.
 
-## Publishing
+### Locally binding to an App
+- Go to the `raydiant-menu` root directory
+- run `nvm use; yarn; yarn build`
+- CD to your App repository
+- Edit the `package.json` file so that `dependencies` includes `"raydiant-menu": "file://[path-to-raydiant-menu]/build/lib"`
+- Run `yarn` to install `raydiant-menu` (make sure you are using react and react-dom v16.8.0)
 
+## Publishing
 Publishing to NPM is currently a manual process:
 
 1. Increment version in `package.json`.
