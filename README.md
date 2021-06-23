@@ -1,3 +1,6 @@
+[![Codeship Status for mirainc/raydiant-menu](https://app.codeship.com/projects/3885e309-9d92-4362-8485-ea00332428b0/status?branch=main)](https://app.codeship.com/projects/447621)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/36c0b433-bcd5-4ba7-ae88-b10f0a967730/deploy-status)](https://app.netlify.com/sites/raydiant-menu/deploys)
+
 Raydiant's React Menu component library for the Raydiant Menu apps.
 
 ## How to use

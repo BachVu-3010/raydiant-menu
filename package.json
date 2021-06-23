@@ -16,7 +16,9 @@
     "lint": "tslint --project .",
     "test": "jest src --env=jsdom --watch",
     "deploy": "sh tasks/npm-publish.sh",
-    "styleguide:build": "tsc && styleguidist build"
+    "styleguide:build": "tsc && styleguidist build",
+    "encryptenv": "jet encrypt docker/deploy.env docker/deploy.env.encrypted --key-path=mirainc_raydiant-menu.aes",
+    "decryptenv": "jet decrypt docker/deploy.env.encrypted docker/deploy.env --key-path=mirainc_raydiant-menu.aes"
   },
   "dependencies": {
     "@emotion/react": "^11.4.0",
