@@ -4,8 +4,8 @@ import { ThemeProvider, Global } from '@emotion/react';
 
 import createTheme from './themes/createTheme';
 import useDeepMemo from './utils/useDeepMemo';
-import useQRCode from './useQrCode';
-import { QR, AppProps } from './types';
+import useQRCode from './useQRCode';
+import { AppProps } from './types';
 import { MenuLayoutProps } from './Layout/MenuLayout';
 
 interface AdditionalProps {
