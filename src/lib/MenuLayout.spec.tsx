@@ -1,21 +1,29 @@
 import React from 'react';
+import should from 'should';
 import { ThemeProvider, Global } from '@emotion/react';
-import * as sinon from 'sinon';
+import { spy, stub } from 'sinon';
 import WebFont from 'webfontloader';
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
-import withMenu from './withMenu';
-import { AppProps, Presentation, QRPoperties } from './types';
+import MenuLayout from './MenuLayout';
+import Layout from './Layout';
+import { Presentation, QR, QRPoperties } from './types';
 
-describe('withMenu', () => {
+describe('MenuLayout', () => {
   let WebFontLoadStub: sinon.SinonStub;
+  const RealImage = Image;
+  const fakeImage = new Image();
+  fakeImage.width = 1920;
+  fakeImage.height = 1080;
 
   beforeAll(() => {
-    WebFontLoadStub = sinon.stub(WebFont, 'load');
+    window.Image = jest.fn().mockImplementation(() => fakeImage);
+    WebFontLoadStub = stub(WebFont, 'load');
   })
 
   afterAll(() => {
+    window.Image = RealImage;
     WebFontLoadStub.restore();
   });
 
@@ -23,16 +31,16 @@ describe('withMenu', () => {
     WebFontLoadStub.reset();
   });
   
-  interface TestComponentProps extends AppProps {
-    anotherProp?: string;
-  }
-  const TestComponent: React.FC<TestComponentProps> = 
-    ({anotherProp}) => <div className='test--component'>{anotherProp}</div>;
-  const ComponentWithMenu = withMenu(TestComponent);
-
-  it('should wrap AppComponent element into a ThemeProvider', () => {
-    const onError = sinon.spy();
-    const onReady = sinon.spy();
+  it('should render Layout inside a ThemeProvider', () => {
+    const categories = [
+      {
+        name: 'category1',
+        items: [{ name: 'category 1 item', pricing: () => 1 }]
+      },
+      { name: 'category 2', items: [] },
+    ];
+    const onError = spy();
+    const onReady = spy();
     const presentation: Presentation = {
       theme: {
         headingFont: 'http://lvh.me/heading-font.woff',
@@ -57,50 +65,50 @@ describe('withMenu', () => {
       },
     };
     const wrapper = mount(
-      <ComponentWithMenu
+      <MenuLayout
+        categories={categories}
         presentation={presentation}
         onError={onError}
         onReady={onReady}
-        anotherProp='some other prop should be passed into AppComponent'
         isPlaying={true}
+        isThumbnail={false}
       />
     );
 
     WebFontLoadStub.should.be.calledOnce();
 
     act(() => WebFontLoadStub.getCalls()[0].args[0].active());
+    act(() => fakeImage.onload(null));
     wrapper.update();
 
     const themeProvider = wrapper.find(ThemeProvider);
-    const content = themeProvider.find(TestComponent);
-    content.prop('presentation').should.eql(presentation);
-    content.prop('onError').should.equal(onError);
-    content.prop('anotherProp').should.equal('some other prop should be passed into AppComponent');
-    content.prop('menuProps').should.eql({
-      imageUrl: 'https://lvh.me/image-url',
-      fontsLoaded: true,
-      qr: {
-        url: 'http://lvh.me/test-qr-image-url',
-        size: 'small',
-        callToAction: 'Call To Action',
-      },
-      layoutMode: 'flip',
-      footnote: 'Custom Footnote',
-      footnoteSize: 'large',
-      animate: true,
-      enableAnimation: true,
-      onReady,
-      priceFormatConfig: {
-        shouldFormatPrice: true,
-        currency: '$',
-        priceFormat: 'integer-format',
-      },
+    const layout = themeProvider.find(Layout);
+    layout.prop('categories').should.equal(categories);
+    layout.prop('onReady').should.equal(onReady);
+    layout.prop('image').should.eql({
+      url: 'https://lvh.me/image-url',
+      width: 1920,
+      height: 1080,
     });
+    layout.prop('qr').should.eql({
+      url: 'http://lvh.me/test-qr-image-url',
+      size: 'small',
+      callToAction: 'Call To Action',
+    });
+    layout.prop('layoutMode').should.equal('flip');
+    layout.prop('footnote').should.equal('Custom Footnote');
+    layout.prop('footnoteSize').should.equal('large');
+    layout.prop('isPlaying').should.be.true();
+    layout.prop('isThumbnail').should.be.false();
+    layout.prop('enableAnimation').should.be.true();
+    layout.prop('shouldFormatPrice').should.be.true();
+    layout.prop('currency').should.equal('$');
+    layout.prop('priceFormat').should.equal('integer-format');
   });
 
   it('should inject font-face into global styles', () => {
     const wrapper = mount(
-      <ComponentWithMenu
+      <MenuLayout
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
@@ -109,6 +117,10 @@ describe('withMenu', () => {
           },
           values: { qrActive: false },
         }}
+        categories={[]}
+        isPlaying
+        onError={spy()}
+        onReady={spy()}
       />
     );
 
@@ -142,7 +154,7 @@ describe('withMenu', () => {
       });
   });
 
-  it('should load fonts and render AppComponent with fontsLoaded and qr prop', () => {
+  it('should load fonts', () => {
     const presentationTheme = {
       headingFont: 'http://lvh.me/heading-font.woff',
       heading2Font: 'http://lvh.me/heading2-font.woff',
@@ -156,20 +168,20 @@ describe('withMenu', () => {
       qrSize: 'small',
       qrCallToAction: 'Call To Action',
     };
-    const wrapper = mount(
-      <ComponentWithMenu
+    mount(
+      <MenuLayout
         presentation={{
           theme: presentationTheme,
           values: qrProperties,
         }}
+        categories={[]}
+        isPlaying
+        onError={spy()}
+        onReady={spy()}
       />
     );
 
     WebFontLoadStub.should.be.calledOnce();
-
-    wrapper.find(TestComponent).prop('menuProps').should.containEql({
-      fontsLoaded: false,
-    });
 
     const fontLoadingConfig = WebFontLoadStub.getCalls()[0].args[0];
     fontLoadingConfig.custom.should.eql({
@@ -180,25 +192,12 @@ describe('withMenu', () => {
         'https___fonts_raydiant_com_Roboto_Regular_woff',
       ],
     });
-
-    act(() => fontLoadingConfig.active());
-    wrapper.update();
-
-    const testComponent = wrapper.find(TestComponent);
-    testComponent.prop('menuProps').should.containEql({ fontsLoaded: true });
-    testComponent.prop('menuProps').should.containEql({
-      qr: {
-        url: 'http://lvh.me/test-qr-image-url',
-        size: 'small',
-        callToAction: 'Call To Action'
-      },
-    });
   });
 
   it('should fire error if failed to load fonts', () => {
-    const onError = sinon.spy();
+    const onError = spy();
     mount(
-      <ComponentWithMenu
+      <MenuLayout
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
@@ -207,7 +206,10 @@ describe('withMenu', () => {
           },
           values: { qrActive: false },
         }}
+        categories={[]}
+        isPlaying
         onError={onError}
+        onReady={spy()}
       />
     );
 
@@ -222,7 +224,7 @@ describe('withMenu', () => {
 
   it('should update theme and reload fonts when theme data is changed', () => {
     const wrapper = mount(
-      <ComponentWithMenu
+      <MenuLayout
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
@@ -231,20 +233,23 @@ describe('withMenu', () => {
           },
           values: { qrActive: false },
         }}
-        onError={sinon.spy()}
-        anotherProp='some other prop should be passed into AppComponent'
+        categories={[]}
+        isPlaying
+        onError={spy()}
+        onReady={spy()}
       />
     );
 
     WebFontLoadStub.should.be.calledOnce();
-    act(() => WebFontLoadStub.getCalls()[0].args[0].active());
-
-    wrapper.update().find(TestComponent).prop('presentation').theme.should.eql({
-      headingFont: 'http://lvh.me/heading-font.woff',
-      heading2Font: 'http://lvh.me/heading2-font.woff',
-      bodyFont: 'http://lvh.me/body-font.woff',
+    WebFontLoadStub.getCalls()[0].args[0].custom.should.eql({
+      families: [
+        'http___lvh_me_heading_font_woff',
+        'http___lvh_me_heading2_font_woff',
+        'http___lvh_me_body_font_woff',
+        'https___fonts_raydiant_com_Roboto_Regular_woff'
+      ],
     });
-
+    
     wrapper.setProps({
       presentation: {
         theme: {
@@ -252,23 +257,24 @@ describe('withMenu', () => {
           heading2Font: 'http://lvh.me/new-heading2-font.woff',
           bodyFont: 'http://lvh.me/new-body-font.woff',
         },
-        values: { qrActive: false },
+        values: { qrActive: false, layout: 'flip' },
       },
     });
 
     WebFontLoadStub.should.be.calledTwice();
-    act(() => WebFontLoadStub.getCalls()[1].args[0].active());
-
-    wrapper.update().find(TestComponent).prop('presentation').theme.should.eql({
-      headingFont: 'http://lvh.me/new-heading-font.woff',
-      heading2Font: 'http://lvh.me/new-heading2-font.woff',
-      bodyFont: 'http://lvh.me/new-body-font.woff',
+    WebFontLoadStub.getCalls()[1].args[0].custom.should.eql({
+      families: [
+        'http___lvh_me_new_heading_font_woff',
+        'http___lvh_me_new_heading2_font_woff',
+        'http___lvh_me_new_body_font_woff',
+        'https___fonts_raydiant_com_Roboto_Regular_woff'
+      ]
     });
   });
 
   it('should not reload theme if theme vars are not deeply changed', () => {
     const wrapper = mount(
-      <ComponentWithMenu
+      <MenuLayout
         presentation={{
           theme: {
             headingFont: 'http://lvh.me/heading-font.woff',
@@ -277,8 +283,10 @@ describe('withMenu', () => {
           },
           values: { qrActive: false },
         }}
-        onError={sinon.spy()}
-        anotherProp='some other prop should be passed into AppComponent'
+        categories={[]}
+        isPlaying
+        onError={spy()}
+        onReady={spy()}
       />
     );
 
@@ -293,12 +301,59 @@ describe('withMenu', () => {
           heading2Font: 'http://lvh.me/heading2-font.woff',
           bodyFont: 'http://lvh.me/body-font.woff',
         },
-        values: { qrActive: false },
+        values: { qrActive: true },
       },
     });
 
     // assert theme was not updated and no rerender
     wrapper.update().find(ThemeProvider).prop('theme').should.equal(oldTheme);
     WebFontLoadStub.should.be.calledOnce();
+  });
+
+  it('should render Layout after fonts loaded and image size calculated ', () => {
+    const categories = [
+      {
+        name: 'category1',
+        items: [{ name: 'category 1 item', pricing: () => 1 }]
+      },
+      { name: 'category 2', items: [] },
+    ];
+    const presentation: Presentation = {
+      theme: {
+        headingFont: 'http://lvh.me/heading-font.woff',
+        heading2Font: 'http://lvh.me/heading2-font.woff',
+        bodyFont: 'http://lvh.me/body-font.woff',
+      },
+      values: {
+        shouldFormatPrice: true,
+        priceFormat: 'integer-format',
+        currency: '$',
+        image: { url: 'https://lvh.me/image-url' },
+        layout: 'flip',
+        enableAnimation: true,
+        footnote: 'Custom Footnote',
+        footnoteSize: 'large',
+        qrActive: false,
+      },
+    };
+    const wrapper = mount(
+      <MenuLayout
+        categories={categories}
+        presentation={presentation}
+        isPlaying
+        onError={spy()}
+        onReady={spy()}
+      />
+    );
+
+    WebFontLoadStub.should.be.calledOnce();
+    wrapper.update().find(ThemeProvider).exists().should.be.true();
+    wrapper.find(Layout).exists().should.be.false();
+    
+    act(() => WebFontLoadStub.getCalls()[0].args[0].active());
+    wrapper.update().find(Layout).exists().should.be.false();
+
+    act(() => fakeImage.onload(null));
+    wrapper.update().find(Layout).exists().should.be.true();
   });
 });

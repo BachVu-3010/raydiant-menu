@@ -1,15 +1,7 @@
 import React from 'react';
 import { PRICE_FORMATS } from '../constants';
 
-export interface PriceFormatConfig {
-  shouldFormatPrice: boolean;
-  currency?: string,
-  priceFormat?: string,
-}
-
-const createPriceFormatter = (
-  { shouldFormatPrice, currency, priceFormat }: PriceFormatConfig
-) => (priceString: string | number) => {
+const createPriceFormatter = (shouldFormatPrice?: boolean, currency?: string, priceFormat?: string) => (priceString: string | number) => {
   if (!shouldFormatPrice) {
     return priceString;
   }
@@ -34,9 +26,8 @@ const createPriceFormatter = (
   }
 };
 
-export default (priceFormatConfig: PriceFormatConfig) => {
-  const { shouldFormatPrice, currency, priceFormat } = priceFormatConfig || {};
-  return React.useMemo(() => createPriceFormatter({ shouldFormatPrice, currency, priceFormat }), [
+export default (shouldFormatPrice?: boolean, currency?: string, priceFormat?: string ) => {
+  return React.useMemo(() => createPriceFormatter(shouldFormatPrice, currency, priceFormat), [
     shouldFormatPrice,
     currency,
     priceFormat,

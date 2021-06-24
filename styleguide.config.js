@@ -11,7 +11,7 @@ module.exports = {
     {
       name: 'MenuLayout',
       components: () => [
-        path.join(__dirname, 'src', 'lib', 'Layout', 'MenuLayout.tsx'),
+        path.join(__dirname, 'src', 'lib', 'MenuLayout.tsx'),
         path.join(__dirname, 'src', 'styleguide', 'components', 'Preview.tsx'),
       ],
     },

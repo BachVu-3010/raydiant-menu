@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageData } from '../types';
+import { ImageData } from './types';
 
 interface ImageSize {
   width: number,

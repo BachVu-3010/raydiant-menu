@@ -30,13 +30,16 @@ describe('Layout', () => {
           image={image}
           qr={qr}
           layoutMode='default'
+          isPlaying
           categories={categories}
           onReady={onReady}
         />
       </ThemeProvider>
     );
 
-    const mainLayout = wrapper.find(Styles.MainLayout);
+    const background = wrapper.find(Styles.Background);
+    background.prop('hide').should.be.false();
+    const mainLayout = background.find(Styles.MainLayout);
     mainLayout.prop('isStacked').should.be.false();
     mainLayout.prop('reverse').should.be.false();
 
@@ -197,11 +200,9 @@ describe('Layout', () => {
           layoutMode='default'
           categories={categories}
           onReady={onReady}
-          priceFormatConfig={{
-            shouldFormatPrice: true,
-            currency: '$',
-            priceFormat: PRICE_FORMATS.FLOAT_2.value,
-          }}
+          shouldFormatPrice
+          currency={'$'}
+          priceFormat={PRICE_FORMATS.FLOAT_2.value}
         />
       </ThemeProvider>
     );
@@ -209,5 +210,38 @@ describe('Layout', () => {
     const columns = wrapper.find(Columns);
     columns.prop('priceFormatter')(11).should.equal('$11.00');
     columns.prop('priceFormatter')(11.556).should.equal('$11.56');
+  });
+
+  it('should hide content while isPlaying is false', () => {
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <Layout
+          categories={[]}
+          isPlaying={false}
+          layoutMode='default'
+          onReady={spy()}
+        />
+      </ThemeProvider>
+    );
+
+    const background = wrapper.find(Styles.Background);
+    background.prop('hide').should.be.true();
+  });
+
+  it('should not hide content while isPlaying is false but isThumbnail is true', () => {
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <Layout
+          categories={[]}
+          isThumbnail={true}
+          isPlaying={false}
+          layoutMode='default'
+          onReady={spy()}
+        />
+      </ThemeProvider>
+    );
+
+    const background = wrapper.find(Styles.Background);
+    background.prop('hide').should.be.false();
   });
 });

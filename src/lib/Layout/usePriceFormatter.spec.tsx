@@ -2,16 +2,21 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { PRICE_FORMATS } from '../constants';
-import usePriceFormatter, { PriceFormatConfig } from './usePriceFormatter';
+import usePriceFormatter from './usePriceFormatter';
 
 describe('usePriceFormatter', () => {
   interface TestComponentProps {
     price: string | number;
-    priceFormatConfig: PriceFormatConfig;
+    priceFormatConfig: {
+      shouldFormatPrice?: boolean,
+      currency?: string,
+      priceFormat?: string
+    };
   }
 
   const TestComponent: React.FC<TestComponentProps> = ({ price, priceFormatConfig }) => {
-    const priceFormatter = usePriceFormatter(priceFormatConfig);
+    const {shouldFormatPrice, currency, priceFormat} = priceFormatConfig;
+    const priceFormatter = usePriceFormatter(shouldFormatPrice, currency, priceFormat);
     return <div className='test--usePriceFormatter'>{priceFormatter(price)}</div>;
   };
 

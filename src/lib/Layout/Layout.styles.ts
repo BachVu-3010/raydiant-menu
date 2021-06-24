@@ -2,7 +2,7 @@ import styled, { StyledComponent } from '@emotion/styled';
 import { OverScan, Size } from '../types';
 
 
-export const Background: StyledComponent<{}> = styled('div')(({ theme }) => ({
+export const Background: StyledComponent<{ hide: boolean }> = styled('div')(({ theme, hide }) => ({
   height: '100%',
   lineHeight: 1.2,
   ...theme.bodyText(),
@@ -13,6 +13,7 @@ export const Background: StyledComponent<{}> = styled('div')(({ theme }) => ({
   '@media (orientation: portrait)': {
     backgroundImage: `url(${theme.backgroundImagePortrait || theme.backgroundImage || ''})`,
   },
+  opacity: hide ? 0 : 1,
 }));
 
 interface MainLayoutProps {isStacked: boolean, reverse: boolean}

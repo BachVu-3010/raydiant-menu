@@ -6,7 +6,7 @@ import CalculateTextLayout from './CalculateTextLayout';
 import Columns from './Columns';
 import * as Styles from './Layout.styles';
 import ImageLayout from './ImageLayout';
-import usePriceFormatter, { PriceFormatConfig } from './usePriceFormatter';
+import usePriceFormatter from './usePriceFormatter';
 import { Category, ImageData, QR, Size, LayoutMode } from '../types';
 
 export interface LayoutProps {
@@ -14,10 +14,13 @@ export interface LayoutProps {
   qr?: QR;
   layoutMode?: LayoutMode,
   categories?: Category[],
-  animate?: boolean;
+  isPlaying?: boolean;
+  isThumbnail?: boolean;
   enableAnimation?: boolean;
   onReady?: () => void;
-  priceFormatConfig?: PriceFormatConfig;
+  shouldFormatPrice?: boolean;
+  currency?: string,
+  priceFormat?: string,
   footnote?: string;
   footnoteSize?: Size;
 }
@@ -35,10 +38,13 @@ const Layout: React.FC<LayoutProps> = ({
   categories,
   footnote,
   footnoteSize,
-  animate,
+  isPlaying,
+  isThumbnail,
   enableAnimation,
   onReady,
-  priceFormatConfig,
+  shouldFormatPrice,
+  currency,
+  priceFormat,
 }) => {
   const theme: Theme = useTheme();
   const isLandscape = !(theme && theme.isPortrait);
@@ -53,7 +59,7 @@ const Layout: React.FC<LayoutProps> = ({
     qr,
     layoutMode,
   ]);
-  const priceFormatter = usePriceFormatter(priceFormatConfig);
+  const priceFormatter = usePriceFormatter(shouldFormatPrice, currency, priceFormat);
 
   const textSpacing = layout.overscan;
   const textDimensions = {
@@ -72,15 +78,15 @@ const Layout: React.FC<LayoutProps> = ({
   const footnoteOnTop = layout.isStacked && layoutMode === 'flip';
 
   return (
-    <Styles.Background>
+    <Styles.Background hide={!isThumbnail && !isPlaying}>
       <Styles.MainLayout isStacked={layout.isStacked} reverse={layoutMode === 'flip'}>
         <ImageLayout
           width={layout.imageSize.width}
           height={layout.imageSize.height}
           image={image}
           qr={qr}
-          animate={animate}
-          enableAnimation={enableAnimation}
+          animate={isPlaying}
+          enableAnimation={!isThumbnail && enableAnimation}
           isPortrait={!isLandscape}
           isFlip={layoutMode === 'flip'}
           isStacked={layout.isStacked}
@@ -112,11 +118,6 @@ const Layout: React.FC<LayoutProps> = ({
       </Styles.MainLayout>
     </Styles.Background>
   );
-};
-
-Layout.defaultProps = {
-  animate: false,
-  enableAnimation: true,
 };
 
 export default Layout;
