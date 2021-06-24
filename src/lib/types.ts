@@ -95,10 +95,3 @@ export interface Presentation {
   theme: ThemeVars;
   values: ValuesProps;
 }
-
-export interface AppProps {
-  presentation: Presentation;
-  onError?: (error: Error) => void;
-  onReady?: () => void;
-  isPlaying?: boolean,
-}
