@@ -95,3 +95,7 @@ export interface Presentation {
   theme: ThemeVars;
   values: ValuesProps;
 }
+
+export interface MenuConfig {
+  pricingUpdatingInterval?: number;
+}

@@ -3,6 +3,7 @@ import React from 'react';
 import * as Styles from './Item.styles';
 import isValidPrice from '../../utils/isValidPrice';
 import { PriceFormatter, Pricing } from '../../types';
+import useUpdatingPrice from './useUpdatingPrice';
 
 const propTypes = {
 };
@@ -40,7 +41,7 @@ const Item: React.FC<ItemProps> = ({
   hidePrice,
   priceFormatter,
 }) => {
-  const price = pricing(priceFormatter);
+  const price = useUpdatingPrice(pricing, priceFormatter);
   const hasPrice = !hidePrice && isValidPrice(price);
   return (
     <>

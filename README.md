@@ -59,7 +59,10 @@ const App ({
   onReady,
   onError,
 }) => {
-  const categories = [...]; // App decides which content to be shown 
+  const categories = [...]; // App decides which content to be shown
+  config = {
+    pricingUpdatingInterval: 1000, // optional, if provided, refresh prices every [pricingUpdatingInterval] miliseconds
+  };
 
   return (
     <MenuLayout
@@ -69,6 +72,7 @@ const App ({
       isThumbnail={isThumbnail}
       onReady={onReady}
       onError={onError}
+      config={}
     />
   );
 }

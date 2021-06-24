@@ -1,16 +1,20 @@
 import React from 'react';
 import { ThemeProvider } from '@emotion/react';
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
+import { useFakeTimers } from 'sinon';
 
 import Item from './Item';
 import * as Styles from './Item.styles';
-import createTheme from '../../../themes/createTheme';
+import createTheme from '../../themes/createTheme';
+import { MenuConfigContext } from '../useMenuConfig';
 
 describe('Item', () => {
   it("should render item's name, description and price", () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
@@ -28,12 +32,11 @@ describe('Item', () => {
 
   it('should render texts with strikethrough is true', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
-          prici={12.0}
-          pricingStrategy='BASE_PRICE'
         />
       </ThemeProvider>
     );
@@ -45,6 +48,7 @@ describe('Item', () => {
     wrapper.setProps({
       children: (
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
@@ -60,8 +64,9 @@ describe('Item', () => {
 
   it('should render texts properly when price is 0', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 0}
@@ -77,8 +82,9 @@ describe('Item', () => {
 
   it('should be able to hide item name', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
@@ -96,8 +102,9 @@ describe('Item', () => {
 
   it('should be able to hide item description', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
@@ -115,8 +122,9 @@ describe('Item', () => {
 
   it('should be able to hide price', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
@@ -133,17 +141,47 @@ describe('Item', () => {
 
   it('should format price', () => {
     const wrapper = mount(
-      <ThemeProvider theme={createTheme({})}>
+      <ThemeProvider theme={createTheme({}, false)}>
         <Item
+          fontSize={16}
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={(priceFormatter) => priceFormatter(12)}
-          priceFormatter={(price) => `formatted ${price}`}
+          priceFormatter={(p) => `formatted ${p}`}
         />
       </ThemeProvider>
     );
     const price = wrapper.find(Styles.Price);
 
     price.text().should.equal('formatted 12');
+  });
+
+  it('should update price if pricingUpdatingInterval is provided', () => {
+    const clock = useFakeTimers(new Date());
+
+    let count = 0;
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <MenuConfigContext.Provider value={{ pricingUpdatingInterval: 500 }}>
+          <Item
+            fontSize={16}
+            name='Neighborhood Pie'
+            description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
+            pricing={(priceFormatter) => priceFormatter(count++)}
+            priceFormatter={(price) => `formatted ${price}`}
+          />
+        </MenuConfigContext.Provider>
+      </ThemeProvider>
+    );
+
+    wrapper.find(Styles.Price).text().should.equal('formatted 0');
+    
+    act(() => clock.tick(550) && undefined);
+    wrapper.update().find(Styles.Price).text().should.equal('formatted 1');
+
+    act(() => clock.tick(550) && undefined);
+    wrapper.update().find(Styles.Price).text().should.equal('formatted 2');
+
+    clock.restore();
   });
 });

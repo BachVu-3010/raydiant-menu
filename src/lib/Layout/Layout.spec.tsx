@@ -12,6 +12,7 @@ import CalculateTextLayout from './CalculateTextLayout';
 import ImageLayout from './ImageLayout';
 import Columns from './Columns';
 import { ImageData, QR } from '../types';
+import { MenuConfigContext } from './useMenuConfig';
 
 describe('Layout', () => {
   it('should render enough content in landscape wrapper', () => {

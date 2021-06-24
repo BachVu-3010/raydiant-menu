@@ -7,9 +7,11 @@ import Columns from './Columns';
 import * as Styles from './Layout.styles';
 import ImageLayout from './ImageLayout';
 import usePriceFormatter from './usePriceFormatter';
-import { Category, ImageData, QR, Size, LayoutMode } from '../types';
+import { Category, ImageData, QR, Size, LayoutMode, MenuConfig } from '../types';
+import { MenuConfigContext } from './useMenuConfig';
 
 export interface LayoutProps {
+  config?: MenuConfig;
   image?: ImageData;
   qr?: QR;
   layoutMode?: LayoutMode,
@@ -32,6 +34,7 @@ interface TextSizeDependencies {
 }
 
 const Layout: React.FC<LayoutProps> = ({
+  config,
   image,
   qr,
   layoutMode,
@@ -78,45 +81,47 @@ const Layout: React.FC<LayoutProps> = ({
   const footnoteOnTop = layout.isStacked && layoutMode === 'flip';
 
   return (
-    <Styles.Background hide={!isThumbnail && !isPlaying}>
-      <Styles.MainLayout isStacked={layout.isStacked} reverse={layoutMode === 'flip'}>
-        <ImageLayout
-          width={layout.imageSize.width}
-          height={layout.imageSize.height}
-          image={image}
-          qr={qr}
-          animate={isPlaying}
-          enableAnimation={!isThumbnail && enableAnimation}
-          isPortrait={!isLandscape}
-          isFlip={layoutMode === 'flip'}
-          isStacked={layout.isStacked}
-        />
-        <Styles.ContentWrapper reverse={footnoteOnTop}>
-          <Styles.TextLayout overscan={textSpacing} footnoteOnTop={footnoteOnTop} hasFootnote={!!formattedFootnote}>
-            <CalculateTextLayout
-              {...textDimensions}
-              maxColumns={4}
-              onCalculated={onReady}
-              textSizeDependencies={textSizeDependencies}
-              priceFormatter={priceFormatter}
-            >
-              {({ measureRef, fontSize, columns, wrap, hide }) => (
-                <Columns
-                  measureRef={measureRef}
-                  categories={categories}
-                  fontSize={fontSize}
-                  columns={columns}
-                  priceFormatter={priceFormatter}
-                  wrap={wrap}
-                  hide={hide}
-                />
-              )}
-            </CalculateTextLayout>
-          </Styles.TextLayout>
-          {formattedFootnote && <Styles.Footnote size={footnoteSize}>{formattedFootnote}</Styles.Footnote>}
-        </Styles.ContentWrapper>
-      </Styles.MainLayout>
-    </Styles.Background>
+    <MenuConfigContext.Provider value={config}>
+      <Styles.Background hide={!isThumbnail && !isPlaying}>
+        <Styles.MainLayout isStacked={layout.isStacked} reverse={layoutMode === 'flip'}>
+          <ImageLayout
+            width={layout.imageSize.width}
+            height={layout.imageSize.height}
+            image={image}
+            qr={qr}
+            animate={isPlaying}
+            enableAnimation={!isThumbnail && enableAnimation}
+            isPortrait={!isLandscape}
+            isFlip={layoutMode === 'flip'}
+            isStacked={layout.isStacked}
+          />
+          <Styles.ContentWrapper reverse={footnoteOnTop}>
+            <Styles.TextLayout overscan={textSpacing} footnoteOnTop={footnoteOnTop} hasFootnote={!!formattedFootnote}>
+              <CalculateTextLayout
+                {...textDimensions}
+                maxColumns={4}
+                onCalculated={onReady}
+                textSizeDependencies={textSizeDependencies}
+                priceFormatter={priceFormatter}
+              >
+                {({ measureRef, fontSize, columns, wrap, hide }) => (
+                  <Columns
+                    measureRef={measureRef}
+                    categories={categories}
+                    fontSize={fontSize}
+                    columns={columns}
+                    priceFormatter={priceFormatter}
+                    wrap={wrap}
+                    hide={hide}
+                  />
+                )}
+              </CalculateTextLayout>
+            </Styles.TextLayout>
+            {formattedFootnote && <Styles.Footnote size={footnoteSize}>{formattedFootnote}</Styles.Footnote>}
+          </Styles.ContentWrapper>
+        </Styles.MainLayout>
+      </Styles.Background>
+    </MenuConfigContext.Provider>
   );
 };
 

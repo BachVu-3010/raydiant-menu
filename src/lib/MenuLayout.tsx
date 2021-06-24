@@ -6,7 +6,7 @@ import useCalculatedImage from './useCalculatedImage';
 import createTheme from './themes/createTheme';
 import useDeepMemo from './utils/useDeepMemo';
 import useQRCode from './useQRCode';
-import { Presentation, ImageData, Category } from './types';
+import { Presentation, ImageData, Category, MenuConfig } from './types';
 import Layout from './Layout';
 
 interface MenuLayoutProps {
@@ -16,10 +16,11 @@ interface MenuLayoutProps {
   onError: (error: Error) => void;
   isPlaying?: boolean;
   isThumbnail?: boolean;
+  config?: MenuConfig;
 }
 
 const MenuLayout: React.FC<MenuLayoutProps> = props => {
-  const { presentation, categories, onError, onReady, isPlaying, isThumbnail } = props;
+  const { presentation, categories, onError, onReady, isPlaying, isThumbnail, config } = props;
   const { theme: themeData = {}, values } = presentation;
   const { shouldFormatPrice, currency, priceFormat, image, layout, enableAnimation, footnote, footnoteSize } = values;
 
@@ -71,6 +72,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
       ))}
         { shouldRenderLayout && (
             <Layout
+              config={config}
               image={imageData}
               qr={qr}
               layoutMode={layout}
@@ -90,5 +92,9 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
     </ThemeProvider>
   );
 };
+
+MenuLayout.defaultProps = {
+  config: {},
+}
 
 export default MenuLayout;

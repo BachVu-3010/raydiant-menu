@@ -1,12 +1,14 @@
 import React from 'react';
 import should from 'should';
-import { stub } from 'sinon';
+import { stub, useFakeTimers } from 'sinon';
 import { mount } from 'enzyme';
 import { ThemeProvider } from '@emotion/react';
+import { act } from 'react-dom/test-utils';
 
 import Variant from './Variant';
 import * as Styles from './Variant.styles';
 import createTheme from '../../themes/createTheme';
+import { MenuConfigContext } from '../useMenuConfig';
 
 const createRef = (obj: object) =>
   Object.defineProperty(obj, 'current', {
@@ -187,5 +189,32 @@ describe('Variant', () => {
     );
 
     wrapper.find(Styles.Price).text().should.be.equal('formatted 5');
+  });
+
+  it('should update price if pricingUpdatingInterval is provided', () => {
+    const clock = useFakeTimers(new Date());
+
+    let count = 0;
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <MenuConfigContext.Provider value={{ pricingUpdatingInterval: 500 }}>
+          <Variant
+            name='Mango milkshake'
+            pricing={(priceFormatter) => priceFormatter(count++)}
+            priceFormatter={(price) => `formatted ${price}`}
+          />
+        </MenuConfigContext.Provider>
+      </ThemeProvider>
+    );
+
+    wrapper.find(Styles.Price).text().should.equal('formatted 0');
+    
+    act(() => clock.tick(550) && undefined);
+    wrapper.update().find(Styles.Price).text().should.equal('formatted 1');
+
+    act(() => clock.tick(550) && undefined);
+    wrapper.update().find(Styles.Price).text().should.equal('formatted 2');
+
+    clock.restore();
   });
 });

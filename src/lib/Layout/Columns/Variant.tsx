@@ -3,6 +3,7 @@ import React from 'react';
 import * as Styles from './Variant.styles';
 import isValidPrice from '../../utils/isValidPrice';
 import { PriceFormatter, Pricing } from '../../types';
+import useUpdatingPrice from './useUpdatingPrice';
 
 interface VariantProps {
   name?: string;
@@ -25,7 +26,7 @@ const Variant: React.FC<VariantProps> = ({ name, pricing, hide, strikethrough, f
   const [nameWidth, setNameWidth] = React.useState(null);
   const nameEl = React.useRef(null);
   const width = nameEl.current ? nameEl.current.offsetWidth : 0;
-  const price = pricing(priceFormatter);
+  const price = useUpdatingPrice(pricing, priceFormatter);
   React.useEffect(() => {
     // Only setNameWidth after finishing calculating text, to avoid changing layout during calculation
     // Without PriceSeparator and Price, setNameWidth will make the NameWrapper overflow

@@ -1,5 +1,6 @@
 ```js
 const PRICE_FORMATS = require('./constants').PRICE_FORMATS;
+const pricing = () => Math.floor(Math.random() * 11);
 const createCategories = (extraCategories) => {
   let numCategories = 10;
   try {
@@ -16,8 +17,8 @@ const createCategories = (extraCategories) => {
           description: 'description is optional',
           pricing: () => 1,
           variants: [
-            { name: 'Vairant #1', pricing: () => 0.5 },
-            { name: 'Vairant #2', pricing: () => 0.45 },
+            { name: 'Vairant #1', pricing },
+            { name: 'Vairant #2', pricing },
           ]
         }
       ],
@@ -29,7 +30,7 @@ const createCategories = (extraCategories) => {
             name: 'sub category item',
             pricing: () => 1,
             variants: [
-              { name: 'Sub category Vairant', pricing: () => 0.5 },
+              { name: 'Sub category Vairant', pricing },
             ]
           }
         ],
@@ -41,9 +42,9 @@ const createCategories = (extraCategories) => {
       items: [
         {
             name: '#2 category item',
-            pricing: () => 1,
+            pricing,
             variants: [
-              { name: `#${idx + 1} category Vairant`, pricing: () => idx },
+              { name: `#${idx + 2} category Vairant`, pricing },
             ]
           }
       ],
@@ -89,6 +90,7 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
               setState({ isPlaying: true })
             }
           }}
+          config={{ pricingUpdatingInterval: 1000 }}
         />
       )
     }
