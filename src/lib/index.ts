@@ -1,2 +1,5 @@
-import Menu from './Menu';
-export default Menu;
+import MenuLayout from './MenuLayout';
+import getMenuProperties from './properties/getMenuProperties';
+
+export default MenuLayout;
+export { getMenuProperties };

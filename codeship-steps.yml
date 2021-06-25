@@ -1,0 +1,7 @@
+- type: serial
+  steps:
+    - type: parallel
+      service: elements
+      steps:
+        - command: yarn lint
+        - command: yarn test
