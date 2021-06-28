@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { spy } from 'sinon';
+import { ThemeProvider } from '@emotion/react';
 
 import QRCard from './';
 import * as Styles from './QRCard.styles';
 import TextFit from './TextFit';
-import { ThemeProvider } from '@emotion/react';
 import createTheme from '../../../themes/createTheme';
 import { QR } from '../../../types';
 

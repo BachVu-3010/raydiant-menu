@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as WebFont from 'webfontloader';
 import { ThemeProvider, Global } from '@emotion/react';
-import useCalculatedImage from './useCalculatedImage';
+import useCalculatedImage from './utils/useCalculatedImage';
 
 import createTheme from './themes/createTheme';
 import useDeepMemo from './utils/useDeepMemo';
