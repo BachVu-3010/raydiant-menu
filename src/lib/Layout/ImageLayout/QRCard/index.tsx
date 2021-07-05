@@ -1,6 +1,7 @@
 import React from 'react';
-import { QR } from '../../../types';
 
+import { QR } from '../../../types';
+import useCachedImageUrl from '../../../utils/useCachedImageUrl';
 import * as Styles from './QRCard.styles';
 import TextFit from './TextFit';
 
@@ -22,15 +23,17 @@ const QRCard: React.FC<QRCardProp> = ({ qr, textPosition, styles }) => {
     overflowHorizontal: false,
   });
 
+  const qrUrl = useCachedImageUrl(qr && qr.url);
+
   if (!qr) {
     return null;
   }
   const { overflowVertical, overflowHorizontal } = overflow;
-  const { url, size, callToAction } = qr;
+  const { size, callToAction } = qr;
 
   return (
     <Styles.Container size={size} textPosition={textPosition} hasCTA={!!callToAction} styles={styles.container}>
-      <Styles.QRCode size={size} src={url} styles={styles.qrImage} />
+      <Styles.QRCode size={size} src={qrUrl} styles={styles.qrImage} />
       {callToAction && (
         <Styles.CallToAction
           size={size}
