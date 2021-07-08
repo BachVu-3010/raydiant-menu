@@ -14,6 +14,9 @@ yarn install --pure-lockfile
 # Build project
 yarn build
 
+# add README.md to lib
+cp ./src/README.md ./build/lib/
+
 # Restore node_modules
 rm -rf node_modules
 mv build/node_modules node_modules 

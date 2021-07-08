@@ -23,6 +23,7 @@ const testPricing = memoize((price: string | number) => () => price);
 export const createTestItem = (index: number, variants?: Variant[]): Item => ({
   name: `item${index}`,
   description: `description${index}`,
+  calories: index % 2 === 0 ? index : undefined,
   pricing: testPricing(index),
   ...(index % 2 === 0 && { strikethrough: true }),
   variants,
@@ -59,6 +60,7 @@ test('Should not group variants if less than max wrappable', () => {
       props: {
         name: 'item1',
         description: 'description1',
+        calories: undefined,
         pricing: testPricing(1),
         pricingStrategy: undefined,
         timeSpecificPricingRules: undefined,
@@ -93,6 +95,7 @@ test('Should not group variants if less than max wrappable', () => {
       props: {
         name: 'item10',
         description: 'description10',
+        calories: 10,
         pricing: testPricing(10),
         pricingStrategy: undefined,
         timeSpecificPricingRules: undefined,
@@ -116,7 +119,7 @@ test('Should group variants if variants count exceeds max wrappable', () => {
     { type: 'heading', props: { name: 'category1', description: 'description1', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', calories: undefined, description: 'description1', pricing: testPricing(1) },
       nestedLevel: 0,
     },
     {
@@ -187,7 +190,7 @@ test('Should group heading with first item if second item exceeds max variants',
     { type: 'heading', props: { name: 'category1', description: 'description1', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', description: 'description1', calories: undefined, pricing: testPricing(1) },
       nestedLevel: 0,
     },
   ]);
@@ -201,19 +204,19 @@ test('Should group heading with items in a single category with less than 4 item
     { type: 'heading', props: { name: 'category1', description: 'description1', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', description: 'description1', calories: undefined, pricing: testPricing(1) },
       nestedLevel: 0,
     },
     {
       type: 'item',
-      props: { name: 'item2', description: 'description2', pricing: testPricing(2), strikethrough: true },
+      props: { name: 'item2', description: 'description2', calories: 2, pricing: testPricing(2), strikethrough: true },
       nestedLevel: 0,
     },
   ]);
   expect(groups[1]).toEqual([
     {
       type: 'item',
-      props: { name: 'item3', description: 'description3', pricing: testPricing(3) },
+      props: { name: 'item3', description: 'description3', calories: undefined, pricing: testPricing(3) },
       nestedLevel: 0,
     },
   ]);
@@ -230,17 +233,17 @@ test('Should group heading with first two items that dont exceed max variants wh
     { type: 'heading', props: { name: 'category1', description: 'description1', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', description: 'description1', calories: undefined, pricing: testPricing(1) },
       nestedLevel: 0,
     },
     {
       type: 'item',
-      props: { name: 'item2', description: 'description2', pricing: testPricing(2), strikethrough: true },
+      props: { name: 'item2', description: 'description2', calories: 2, pricing: testPricing(2), strikethrough: true },
       nestedLevel: 0,
     },
     {
       type: 'item',
-      props: { name: 'item3', description: 'description3', pricing: testPricing(3) },
+      props: { name: 'item3', description: 'description3', calories: undefined, pricing: testPricing(3) },
       nestedLevel: 0,
     },
   ]);
@@ -248,7 +251,7 @@ test('Should group heading with first two items that dont exceed max variants wh
     { type: 'heading', props: { name: 'category2', description: 'description2', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', description: 'description1', calories: undefined, pricing: testPricing(1) },
       nestedLevel: 0,
     },
   ]);
@@ -268,31 +271,31 @@ test('Should group heading with first two items and last two items of a category
     { type: 'heading', props: { name: 'category1', description: 'description1', isSubHeading: false }, nestedLevel: 0 },
     {
       type: 'item',
-      props: { name: 'item1', description: 'description1', pricing: testPricing(1) },
+      props: { name: 'item1', description: 'description1', calories: undefined, pricing: testPricing(1) },
       nestedLevel: 0,
     },
     {
       type: 'item',
-      props: { name: 'item2', description: 'description2', pricing: testPricing(2), strikethrough: true },
+      props: { name: 'item2', description: 'description2', calories: 2, pricing: testPricing(2), strikethrough: true },
       nestedLevel: 0,
     },
   ]);
   expect(groups[1]).toEqual([
     {
       type: 'item',
-      props: { name: 'item3', description: 'description3', pricing: testPricing(3) },
+      props: { name: 'item3', description: 'description3', calories: undefined, pricing: testPricing(3) },
       nestedLevel: 0,
     },
   ]);
   expect(groups[2]).toEqual([
     {
       type: 'item',
-      props: { name: 'item4', description: 'description4', pricing: testPricing(4), strikethrough: true },
+      props: { name: 'item4', description: 'description4', calories: 4, pricing: testPricing(4), strikethrough: true },
       nestedLevel: 0,
     },
     {
       type: 'item',
-      props: { name: 'item5', description: 'description5', pricing: testPricing(5) },
+      props: { name: 'item5', description: 'description5', calories: undefined, pricing: testPricing(5) },
       nestedLevel: 0,
     },
   ]);
@@ -350,6 +353,7 @@ test('Should keep hiding props', () => {
       props: {
         name: 'item1',
         description: 'description1',
+        calories: undefined,
         pricing: testPricing(1),
         pricingStrategy: undefined,
         timeSpecificPricingRules: undefined,
@@ -385,6 +389,7 @@ test('Should keep hiding props', () => {
       props: {
         name: 'item10',
         description: 'description10',
+        calories: 10,
         pricing: testPricing(10),
         pricingStrategy: undefined,
         timeSpecificPricingRules: undefined,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as Styles from './Item.styles';
 import isValidPrice from '../../utils/isValidPrice';
-import { PriceFormatter, Pricing } from '../../types';
+import { PriceFormatter, Pricing, Calories } from '../../types';
 import useUpdatingPrice from './useUpdatingPrice';
 
 const propTypes = {
@@ -11,6 +11,7 @@ const propTypes = {
 interface ItemProps {
   name?: string;
   description?: string;
+  calories?: Calories;
   pricing?: Pricing;
   strikethrough?: boolean;
   fontSize: number;
@@ -33,6 +34,7 @@ const defaultProps = {
 const Item: React.FC<ItemProps> = ({
   name,
   description,
+  calories,
   pricing,
   strikethrough,
   fontSize,
@@ -54,6 +56,11 @@ const Item: React.FC<ItemProps> = ({
         <Styles.Description strikethrough={strikethrough} fontSize={fontSize}>
           {description}
         </Styles.Description>
+      )}
+      {([undefined, null, ''] as Calories[]).includes(calories) || (
+        <Styles.Calories strikethrough={strikethrough} fontSize={fontSize}>
+          {calories}
+        </Styles.Calories>
       )}
     </>
   );

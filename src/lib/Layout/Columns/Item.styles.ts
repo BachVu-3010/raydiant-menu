@@ -26,3 +26,11 @@ export const Description: StyledComponent<{ strikethrough?: boolean, fontSize: n
   textDecoration: strikethrough ? 'line-through' : 'none',
   lineHeight: lineHighByFontSize(fontSize),
 }));
+
+export const Calories: StyledComponent<{ strikethrough?: boolean, fontSize: number }> = styled('div')(({ strikethrough, fontSize }) => ({
+  opacity: 0.8,
+  textDecoration: strikethrough ? 'line-through' : 'none',
+  fontSize: '0.77em',
+  paddingTop: '0.25em',
+  lineHeight: lineHighByFontSize(fontSize * 0.77),
+}));

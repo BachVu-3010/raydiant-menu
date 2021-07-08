@@ -2,6 +2,8 @@ export type PriceFormatter = (price: number | string) => any;
 
 export type Pricing = (priceFormatter?: PriceFormatter) => any;
 
+export type Calories = number | string;
+
 export interface Variant {
   name?: string;
   description?: string;
@@ -15,6 +17,7 @@ export interface Variant {
 export interface Item {
   name?: string;
   description?: string;
+  calories?: Calories;
   pricing?: Pricing;
   variants?: Variant[];
   strikethrough?: boolean;

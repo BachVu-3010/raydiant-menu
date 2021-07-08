@@ -1,5 +1,5 @@
 import useDeepMemo from '../../utils/useDeepMemo';
-import { Category, Item, Pricing } from '../../types';
+import { Category, Item, Pricing, Calories } from '../../types';
 
 export const MAX_VARIANTS_BEFORE_WRAP = 8;
 
@@ -7,6 +7,7 @@ export type DisplayType = 'heading' | 'item' | 'variant' | 'divider';
 interface DisplayItemProps {
   name?: string;
   description?: string;
+  calories?: Calories;
   pricing?: Pricing;
   strikethrough?: boolean;
   hideName?: boolean;
@@ -61,6 +62,7 @@ export function createMenuGroups(categories: Category[], shouldWrapCategories?: 
         {
           name: item.name,
           description: item.description,
+          calories: item.calories,
           pricing: item.pricing,
           strikethrough: item.strikethrough,
           hideName: item.hideName,
@@ -135,6 +137,7 @@ export function createMenuGroups(categories: Category[], shouldWrapCategories?: 
         {
           name: item.name,
           description: item.description,
+          calories: item.calories,
           pricing: item.pricing,
           strikethrough: item.strikethrough,
           hideName: item.hideName,
