@@ -57,7 +57,7 @@ const Item: React.FC<ItemProps> = ({
           {description}
         </Styles.Description>
       )}
-      {([undefined, null, ''] as Calories[]).includes(calories) || (
+      {(calories ?? '') !== '' && (
         <Styles.Calories strikethrough={strikethrough} fontSize={fontSize}>
           {calories}
         </Styles.Calories>
