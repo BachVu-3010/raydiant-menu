@@ -50,7 +50,8 @@ presentation: {
 
 ### 3. Render MenuLayout
 ```js
-\\ App.jsx
+// App.jsx
+import MenuLayout from 'raydiant-menu';
 
 const App ({
   presentation,

@@ -18,6 +18,7 @@ describe('Item', () => {
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
+          calories='cal 0.0'
         />
       </ThemeProvider>
     );
@@ -28,6 +29,11 @@ describe('Item', () => {
     name.text().should.equal('Neighborhood Pie12');
     description.text().should.equal('killer white sauce, spinach, pepperoni, cumbled italian sausage');
     price.text().should.equal('12');
+
+    const calories = wrapper.find(Styles.Calories);
+    (!!calories.prop('strikethrough')).should.be.false();
+    calories.prop('fontSize').should.equal(16);
+    calories.text().should.equal('cal 0.0');
   });
 
   it('should render texts with strikethrough is true', () => {
@@ -53,12 +59,14 @@ describe('Item', () => {
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
           strikethrough
+          calories={0.0}
         />
       ),
     });
 
     wrapper.update();
     wrapper.find(Styles.Name).prop('strikethrough').should.be.true();
+    wrapper.find(Styles.Description).prop('strikethrough').should.be.true();
     wrapper.find(Styles.Description).prop('strikethrough').should.be.true();
   });
 
@@ -128,6 +136,7 @@ describe('Item', () => {
           name='Neighborhood Pie'
           description='killer white sauce, spinach, pepperoni, cumbled italian sausage'
           pricing={() => 12}
+          calories={1500}
           hidePrice
         />
       </ThemeProvider>
@@ -137,6 +146,25 @@ describe('Item', () => {
     wrapper.find(Styles.Name).exists().should.be.true();
     wrapper.find(Styles.PriceSeparator).exists().should.be.false();
     wrapper.find(Styles.Price).exists().should.be.false();
+    wrapper.find(Styles.Calories).exists().should.be.true();
+  });
+
+  it('should hide calories if it empty', () => {
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <Item
+          fontSize={16}
+          name='Neighborhood Pie'
+          description='killer white sauce'
+          pricing={() => 12}
+          calories=''
+        />
+      </ThemeProvider>
+    );
+
+    wrapper.find(Styles.Name).exists().should.be.true();
+    wrapper.find(Styles.Description).exists().should.be.true();
+    wrapper.find(Styles.Calories).exists().should.be.false();
   });
 
   it('should format price', () => {

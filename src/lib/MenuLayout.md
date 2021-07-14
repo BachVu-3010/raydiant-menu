@@ -1,7 +1,7 @@
 ```js
 const PRICE_FORMATS = require('./constants').PRICE_FORMATS;
 const pricing = () => Math.floor(Math.random() * 11);
-const createCategories = (extraCategories) => {
+const createCategories = (extraCategories, withCalories) => {
   let numCategories = 10;
   try {
     numCategories = Math.max(0, parseInt(String(extraCategories)));
@@ -19,7 +19,8 @@ const createCategories = (extraCategories) => {
           variants: [
             { name: 'Vairant #1', pricing },
             { name: 'Vairant #2', pricing },
-          ]
+          ],
+          calories: withCalories ? 'cal 0' : undefined,
         }
       ],
       subgroups: [{
@@ -31,7 +32,8 @@ const createCategories = (extraCategories) => {
             pricing: () => 1,
             variants: [
               { name: 'Sub category Vairant', pricing },
-            ]
+            ],
+            calories: withCalories ? 'cal 115.5' : undefined,
           }
         ],
       }]
@@ -45,7 +47,8 @@ const createCategories = (extraCategories) => {
             pricing,
             variants: [
               { name: `#${idx + 2} category Vairant`, pricing },
-            ]
+            ],
+            calories: withCalories ? `cal ${Math.floor(Math.random() * 10000) / 10.0}` : undefined,
           }
       ],
     })),
@@ -53,6 +56,7 @@ const createCategories = (extraCategories) => {
 };
 
 initialState = {
+  withCalories: false,
   vertical: false,
   qrActive: false,
   isPlaying: false,
@@ -79,7 +83,7 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
       (themeVars, imageUrl) => (
         <MenuLayout 
           presentation={createPresentation(themeVars, state.qrActive, imageUrl)}
-          categories={createCategories(state.extraCategories)}
+          categories={createCategories(state.extraCategories, state.withCalories)}
           isPlaying={state.isPlaying}
           onError={(error) => {
             console.warn('onError', error);
@@ -106,6 +110,12 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
       setState(state => ({ ...state, vertical: !state.vertical}));
     }} />
     Vertical?
+  </h2>
+  <h2>
+    <input id='calories' type='checkbox' value={state.withCalories} onChange={(event) => {
+      setState(state => ({ ...state, withCalories: !state.withCalories}));
+    }} />
+    Calories?
   </h2>
   <h2>
     <input id='qr' type='checkbox' value={state.qrActive} onChange={(event) => {
