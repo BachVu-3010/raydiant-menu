@@ -1,6 +1,6 @@
 ```js
 const PRICE_FORMATS = require('./constants').PRICE_FORMATS;
-const pricing = () => Math.floor(Math.random() * 11);
+const pricing = (priceFormatter) => priceFormatter(Math.floor(Math.random() * 11));
 const createCategories = (extraCategories, withCalories) => {
   let numCategories = 10;
   try {
@@ -15,10 +15,10 @@ const createCategories = (extraCategories, withCalories) => {
         {
           name: 'first item',
           description: 'description is optional',
-          pricing: () => 1,
+          pricing: (priceFormatter) => priceFormatter(1),
           variants: [
-            { name: 'Vairant #1', pricing },
-            { name: 'Vairant #2', pricing },
+            { name: 'Variant #1', pricing },
+            { name: 'Variant #2', pricing },
           ],
           calories: withCalories ? 'cal 0' : undefined,
         }
@@ -29,9 +29,9 @@ const createCategories = (extraCategories, withCalories) => {
         items: [
           {
             name: 'sub category item',
-            pricing: () => 1,
+            pricing: (priceFormatter) => priceFormatter(1),
             variants: [
-              { name: 'Sub category Vairant', pricing },
+              { name: 'Sub category Variant', pricing },
             ],
             calories: withCalories ? 'cal 115.5' : undefined,
           }
@@ -46,7 +46,7 @@ const createCategories = (extraCategories, withCalories) => {
             name: '#2 category item',
             pricing,
             variants: [
-              { name: `#${idx + 2} category Vairant`, pricing },
+              { name: `#${idx + 2} category Variant`, pricing },
             ],
             calories: withCalories ? `cal ${Math.floor(Math.random() * 10000) / 10.0}` : undefined,
           }
@@ -59,11 +59,12 @@ initialState = {
   withCalories: false,
   vertical: false,
   qrActive: false,
+  shouldFormatPrice: false,
   isPlaying: false,
   extraCategories: '10',
 };
 
-const createPresentation = (themeVars, qrActive, imageUrl) => ({
+const createPresentation = (themeVars, qrActive, imageUrl, shouldFormatPrice) => ({
   values: {
     layoutMode: 'default',
     image: { url: imageUrl },
@@ -73,6 +74,10 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
     qrUrlContent: 'http://lvh.me/test-qr-url',
     qrSize: 'small',
     qrCallToAction: 'Call To Action',
+    ...(shouldFormatPrice && { 
+      shouldFormatPrice: true,
+      priceFormat: PRICE_FORMATS.FLOAT_2.value,
+    }),
   },
   theme: themeVars,
 });
@@ -82,7 +87,7 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
     {
       (themeVars, imageUrl) => (
         <MenuLayout 
-          presentation={createPresentation(themeVars, state.qrActive, imageUrl)}
+          presentation={createPresentation(themeVars, state.qrActive, imageUrl, state.shouldFormatPrice)}
           categories={createCategories(state.extraCategories, state.withCalories)}
           isPlaying={state.isPlaying}
           onError={(error) => {
@@ -122,6 +127,12 @@ const createPresentation = (themeVars, qrActive, imageUrl) => ({
       setState(state => ({ ...state, qrActive: !state.qrActive}));
     }} />
     QR Code?
+  </h2>
+  <h2>
+    <input id='format-price' type='checkbox' value={state.shouldFormatPrice} onChange={(event) => {
+      setState(state => ({ ...state, shouldFormatPrice: !state.shouldFormatPrice}));
+    }} />
+    Should format price?
   </h2>
 </div>
 ```

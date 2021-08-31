@@ -50,7 +50,7 @@ describe('MenuLayout', () => {
       values: {
         shouldFormatPrice: true,
         priceFormat: 'integer-format',
-        currency: '$',
+        currency: undefined,
         image: { url: 'https://lvh.me/image-url' },
         layout: 'flip',
         enableAnimation: true,

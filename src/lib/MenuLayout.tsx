@@ -8,6 +8,7 @@ import useDeepMemo from './utils/useDeepMemo';
 import useQRCode from './useQRCode';
 import { Presentation, ImageData, Category, MenuConfig } from './types';
 import Layout from './Layout';
+import { DEFAULT_CURRENCY } from './constants';
 
 interface MenuLayoutProps {
   presentation: Presentation;
@@ -82,7 +83,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
               enableAnimation={enableAnimation}
               onReady={onReady}
               shouldFormatPrice={shouldFormatPrice}
-              currency={currency}
+              currency={currency ?? DEFAULT_CURRENCY}
               priceFormat={priceFormat}
               footnote={footnote}
               footnoteSize={footnoteSize}

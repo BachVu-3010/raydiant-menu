@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as PropTypes from 'raydiant-kit/prop-types';
 
-import { PRICE_FORMATS } from '../constants';
+import { PRICE_FORMATS, DEFAULT_CURRENCY } from '../constants';
 import { Presentation } from '../types';
 import getQRCodeProperties from './getQRCodeProperties';
 
@@ -17,7 +17,7 @@ export default (presentation: Presentation) => {
     currency: PropTypes.string('currency')
       .maxLength(3)
       .hide(!shouldFormatPrice)
-      .default('$')
+      .default(DEFAULT_CURRENCY)
       .helperText('3 character max'),
     priceFormat: PropTypes.toggleButtonGroup('format')
       .exclusive()
