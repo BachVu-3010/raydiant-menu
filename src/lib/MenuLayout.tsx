@@ -10,14 +10,36 @@ import { Presentation, ImageData, Category, MenuConfig } from './types';
 import Layout from './Layout';
 import { DEFAULT_CURRENCY } from './constants';
 
+type OnError = (error: Error) => void;
+
 interface MenuLayoutProps {
   presentation: Presentation;
   categories: Category[];
   onReady: () => void;
-  onError: (error: Error) => void;
+  onError: OnError;
   isPlaying?: boolean;
   isThumbnail?: boolean;
   config?: MenuConfig;
+}
+
+interface DisableableOnError extends OnError {
+  disable(): void;
+}
+
+const createDisableableOnError = (onError: OnError) : DisableableOnError => {
+  let disabled = false;
+
+  function disableableOnError (error: Error) {
+    if (!disabled) {
+      onError(error);
+    }
+  }
+
+  disableableOnError.disable = () => {
+    disabled = true;
+  }
+
+  return disableableOnError;
 }
 
 const MenuLayout: React.FC<MenuLayoutProps> = props => {
@@ -37,6 +59,8 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
 
   const theme = useDeepMemo(createTheme, [themeData, isPortrait]);
 
+  const disableableOnError = React.useMemo(() => createDisableableOnError(onError), [onError]);
+
   React.useEffect(() => {
     const families = theme.toLoadFonts;
     if (families.length === 0) {
@@ -52,10 +76,13 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
         setFontsLoaded(true);
       },
       inactive: () => {
-        onError(new Error('Failed to load fonts.'));
+        disableableOnError(new Error('Failed to load fonts.'));
       },
     });
-  }, [theme.toLoadFonts, onError]);
+    return () => {
+      disableableOnError.disable();
+    };
+  }, [theme.toLoadFonts, disableableOnError]);
 
   const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
   const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
