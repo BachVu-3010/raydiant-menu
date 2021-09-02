@@ -22,24 +22,24 @@ interface MenuLayoutProps {
   config?: MenuConfig;
 }
 
-interface DisableableOnError extends OnError {
-  disable(): void;
+interface IgnorableOnError extends OnError {
+  ignore(): void;
 }
 
-const createDisableableOnError = (onError: OnError) : DisableableOnError => {
-  let disabled = false;
+const createIgnorableOnError = (onError: OnError) : IgnorableOnError => {
+  let ignored = false;
 
-  function disableableOnError (error: Error) {
-    if (!disabled) {
+  function ignorableOnError (error: Error) {
+    if (!ignored) {
       onError(error);
     }
   }
 
-  disableableOnError.disable = () => {
-    disabled = true;
+  ignorableOnError.ignore = () => {
+    ignored = true;
   }
 
-  return disableableOnError;
+  return ignorableOnError;
 }
 
 const MenuLayout: React.FC<MenuLayoutProps> = props => {
@@ -59,7 +59,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
 
   const theme = useDeepMemo(createTheme, [themeData, isPortrait]);
 
-  const disableableOnError = React.useMemo(() => createDisableableOnError(onError), [onError]);
+  const ignorableOnError = React.useMemo(() => createIgnorableOnError(onError), [onError]);
 
   React.useEffect(() => {
     const families = theme.toLoadFonts;
@@ -76,13 +76,13 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
         setFontsLoaded(true);
       },
       inactive: () => {
-        disableableOnError(new Error('Failed to load fonts.'));
+        ignorableOnError(new Error('Failed to load fonts.'));
       },
     });
     return () => {
-      disableableOnError.disable();
+      ignorableOnError.ignore();
     };
-  }, [theme.toLoadFonts, disableableOnError]);
+  }, [theme.toLoadFonts, ignorableOnError]);
 
   const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
   const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
