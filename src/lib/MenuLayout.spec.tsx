@@ -50,7 +50,7 @@ describe('MenuLayout', () => {
       values: {
         shouldFormatPrice: true,
         priceFormat: 'integer-format',
-        currency: '$',
+        currency: undefined,
         image: { url: 'https://lvh.me/image-url' },
         layout: 'flip',
         enableAnimation: true,
@@ -220,6 +220,34 @@ describe('MenuLayout', () => {
 
     onError.should.be.calledOnce();
     onError.getCalls()[0].args[0].message.should.equal('Failed to load fonts.');
+  });
+
+  it('should not fire load font error if the component has already unmounted', () => {
+    const onError = spy();
+    const wrapper = mount(
+      <MenuLayout
+        presentation={{
+          theme: {
+            headingFont: 'http://lvh.me/heading-font.woff',
+            heading2Font: 'http://lvh.me/heading2-font.woff',
+            bodyFont: 'http://lvh.me/body-font.woff',
+          },
+          values: { qrActive: false },
+        }}
+        categories={[]}
+        isPlaying
+        onError={onError}
+        onReady={spy()}
+      />
+    );
+
+    WebFontLoadStub.should.be.calledOnce();
+    onError.should.not.be.called();
+
+    wrapper.unmount();
+    WebFontLoadStub.getCalls()[0].args[0].inactive(new Error());
+
+    onError.should.not.be.called();
   });
 
   it('should update theme and reload fonts when theme data is changed', () => {

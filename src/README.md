@@ -61,7 +61,7 @@ const App ({
   onError,
 }) => {
   const categories = [...]; // App decides which content to be shown
-  config = {
+  const config = {
     pricingUpdatingInterval: 1000, // optional, if provided, refresh prices every [pricingUpdatingInterval] miliseconds
   };
 

@@ -8,15 +8,38 @@ import useDeepMemo from './utils/useDeepMemo';
 import useQRCode from './useQRCode';
 import { Presentation, ImageData, Category, MenuConfig } from './types';
 import Layout from './Layout';
+import { DEFAULT_CURRENCY } from './constants';
+
+type OnError = (error: Error) => void;
 
 interface MenuLayoutProps {
   presentation: Presentation;
   categories: Category[];
   onReady: () => void;
-  onError: (error: Error) => void;
+  onError: OnError;
   isPlaying?: boolean;
   isThumbnail?: boolean;
   config?: MenuConfig;
+}
+
+interface IgnorableOnError extends OnError {
+  ignore(): void;
+}
+
+const createIgnorableOnError = (onError: OnError) : IgnorableOnError => {
+  let ignored = false;
+
+  function ignorableOnError (error: Error) {
+    if (!ignored) {
+      onError(error);
+    }
+  }
+
+  ignorableOnError.ignore = () => {
+    ignored = true;
+  }
+
+  return ignorableOnError;
 }
 
 const MenuLayout: React.FC<MenuLayoutProps> = props => {
@@ -36,6 +59,8 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
 
   const theme = useDeepMemo(createTheme, [themeData, isPortrait]);
 
+  const ignorableOnError = React.useMemo(() => createIgnorableOnError(onError), [onError]);
+
   React.useEffect(() => {
     const families = theme.toLoadFonts;
     if (families.length === 0) {
@@ -51,10 +76,13 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
         setFontsLoaded(true);
       },
       inactive: () => {
-        onError(new Error('Failed to load fonts.'));
+        ignorableOnError(new Error('Failed to load fonts.'));
       },
     });
-  }, [theme.toLoadFonts, onError]);
+    return () => {
+      ignorableOnError.ignore();
+    };
+  }, [theme.toLoadFonts, ignorableOnError]);
 
   const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
   const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
@@ -82,7 +110,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
               enableAnimation={enableAnimation}
               onReady={onReady}
               shouldFormatPrice={shouldFormatPrice}
-              currency={currency}
+              currency={currency ?? DEFAULT_CURRENCY}
               priceFormat={priceFormat}
               footnote={footnote}
               footnoteSize={footnoteSize}

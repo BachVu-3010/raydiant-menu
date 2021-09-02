@@ -5,3 +5,5 @@ export const PRICE_FORMATS = {
   FLOAT_2: { label: '0.00', value: 'float-2-format' },
   DEFAULT: 'simple-format',
 };
+
+export const DEFAULT_CURRENCY = '$';
