@@ -196,7 +196,7 @@ describe('MenuLayout', () => {
 
   it('should fire error if failed to load fonts', () => {
     const onError = spy();
-    mount(
+    const wrapper = mount(
       <MenuLayout
         presentation={{
           theme: {
@@ -214,6 +214,26 @@ describe('MenuLayout', () => {
     );
 
     WebFontLoadStub.should.be.calledOnce();
+    onError.should.not.be.called();
+
+    WebFontLoadStub.getCalls()[0].args[0].inactive(new Error());
+
+    onError.should.be.calledOnce();
+    onError.getCalls()[0].args[0].message.should.equal('Failed to load fonts.');
+
+    onError.resetHistory();
+    WebFontLoadStub.resetHistory();
+    wrapper.setProps({
+      presentation: {
+        theme: {
+          headingFont: 'http://lvh.me/new-heading-font.woff',
+          heading2Font: 'http://lvh.me/new-heading2-font.woff',
+          bodyFont: 'http://lvh.me/new-body-font.woff',
+        },
+        values: { qrActive: false },
+      },
+    });
+
     onError.should.not.be.called();
 
     WebFontLoadStub.getCalls()[0].args[0].inactive(new Error());
