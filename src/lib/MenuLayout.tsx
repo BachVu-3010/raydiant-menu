@@ -59,13 +59,13 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
 
   const theme = useDeepMemo(createTheme, [themeData, isPortrait]);
 
-  const ignorableOnError = React.useMemo(() => createIgnorableOnError(onError), [onError]);
-
   React.useEffect(() => {
     const families = theme.toLoadFonts;
     if (families.length === 0) {
       return;
     }
+
+    const ignorableOnError = createIgnorableOnError(onError);
 
     // Prevents rendering the layout until the fonts are loaded.
     setFontsLoaded(false);
@@ -82,7 +82,7 @@ const MenuLayout: React.FC<MenuLayoutProps> = props => {
     return () => {
       ignorableOnError.ignore();
     };
-  }, [theme.toLoadFonts, ignorableOnError]);
+  }, [theme.toLoadFonts, onError]);
 
   const { qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction } = values;
   const qr = useQRCode({ qrActive, qrSource, qrUrlContent, qrSize, qrImage, qrCallToAction }, onError );
