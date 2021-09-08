@@ -180,7 +180,9 @@ export function createMenuGroups(categories: Category[], shouldWrapCategories?: 
     // Start a new group for every category.
     commitGroup();
 
-    if ((category.name && !category.hideName) || (category.description && !category.hideDescription)) {
+    if (category.isUncategorized && nestedLevel === 0 && groups.length > 0) {
+      addToGroup('divider', {});
+    } else if ((category.name && !category.hideName) || (category.description && !category.hideDescription)) {
       addToGroup(
         'heading',
         {
@@ -192,8 +194,6 @@ export function createMenuGroups(categories: Category[], shouldWrapCategories?: 
         },
         nestedLevel
       );
-    } else if (groups.length > 0) {
-      addToGroup('divider', {});
     }
 
     const items = category.items || [];

@@ -34,6 +34,7 @@ export interface Category {
   hideName?: boolean;
   hideDescription?: boolean;
   subgroups?: Category[];
+  isUncategorized?: boolean;
 };
 
 export interface ImageData {

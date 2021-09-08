@@ -46,5 +46,5 @@ export const Divider: StyledComponent<{}> = styled('div')(({ theme }) => ({
   border: `0.125em solid ${theme.headingText().color}`,
   backgroundColor: theme.headingText().color,
   marginTop: '2em',
-  marginBottom: '2em',
+  marginBottom: '1em',
 }));

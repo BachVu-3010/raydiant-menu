@@ -11,6 +11,7 @@ const createCategories = (extraCategories, withCalories) => {
     {
       name: 'First Category',
       description: 'category description',
+      hideDescription: true,
       items: [
         {
           name: 'first item',
@@ -26,6 +27,8 @@ const createCategories = (extraCategories, withCalories) => {
       subgroups: [{
         name: 'Sub Category',
         description: 'sub category description',
+        hideName: true,
+        hideDescription: true,
         items: [
           {
             name: 'sub category item',
@@ -43,15 +46,39 @@ const createCategories = (extraCategories, withCalories) => {
       description: 'category description',
       items: [
         {
-            name: '#2 category item',
-            pricing,
-            variants: [
-              { name: `#${idx + 2} category Variant`, pricing },
-            ],
-            calories: withCalories ? `cal ${Math.floor(Math.random() * 10000) / 10.0}` : undefined,
-          }
+          name: '#2 category item',
+          pricing,
+          variants: [
+            { name: `#${idx + 2} category Variant`, pricing },
+          ],
+          calories: withCalories ? `cal ${Math.floor(Math.random() * 10000) / 10.0}` : undefined,
+        }
       ],
     })),
+    {
+      name: 'Uncategorized Category',
+      description: 'Uncategorized category description',
+      isUncategorized: true,
+      items: [
+        {
+          name: 'first uncategorized item',
+          description: 'description is optional',
+          pricing: (priceFormatter) => priceFormatter(1),
+          variants: [
+            { name: 'Variant #1', pricing },
+            { name: 'Variant #2', pricing },
+          ],
+          calories: withCalories ? 'cal 0' : undefined,
+        },
+        {
+          name: 'second uncategorized item',
+          description: 'description is optional',
+          pricing: (priceFormatter) => priceFormatter(1),
+          variants: [{ name: 'Variant #1', pricing }],
+          calories: withCalories ? 'cal 115.5' : undefined,
+        }
+      ]
+    },
   ];
 };
 

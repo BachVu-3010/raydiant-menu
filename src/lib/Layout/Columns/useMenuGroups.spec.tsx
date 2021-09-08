@@ -424,28 +424,45 @@ describe('useMenuGroups', () => {
     wrapper.update().find(TestChildComponent).prop('groups').should.equal(groups);
   });
 
-  it('should return groups with a divider if some later category have to name', () => {
+  it('should return groups with a divider if a category leads an uncategorized category', () => {
     const wrapper = mount(
       <TestComponent
-        categories={[createTestCategory(1, [], []), createTestCategory(null, [], [createTestItem(1, [])])]}
+        categories={[createTestCategory(1, [], []), { ...createTestCategory(2, [], [createTestItem(1, [])]), isUncategorized:true }]}
         wrap={true}
       />
     );
 
-    wrapper
-      .find(TestChildComponent)
-      .prop('groups')[1][0]
-      .should.eql({ type: 'divider', props: {}, nestedLevel: undefined });
+    const groups = wrapper.find(TestChildComponent).prop('groups')
+    groups.should.have.length(2);
+    groups[1].should.have.length(2);
+    groups[1][0].should.eql({ type: 'divider', props: {}, nestedLevel: undefined });
   });
 
-  it('should not have divider if the first category have to name', () => {
+  it('should return groups without a divider if an uncategorized category leads a category', () => {
     const wrapper = mount(
-      <TestComponent categories={[createTestCategory(null, [], [createTestItem(1, [])])]} wrap={true} />
+      <TestComponent
+        categories={[{ ...createTestCategory(1, [], []), isUncategorized:true }, createTestCategory(2, [], [createTestItem(1, [])])]}
+        wrap={true}
+      />
+    );
+
+    const groups = wrapper.find(TestChildComponent).prop('groups')
+    groups.should.have.length(2);
+    groups[0].should.have.length(1);
+    groups[0][0].type.should.not.equal('divider');
+  });
+
+  it('should not have divider if sub-groups is an uncategorized category', () => {
+    const wrapper = mount(
+      <TestComponent 
+        categories={[createTestCategory(1, [], []), createTestCategory(2, [{ ...createTestCategory(3, [], [createTestItem(1, [])]), isUncategorized:true }], [])]}
+        wrap={true} 
+      />
     );
 
     const groups = wrapper.find(TestChildComponent).prop('groups');
-    groups.should.have.length(1);
-    groups[0].should.have.length(1);
-    groups[0][0].type.should.not.equal('divider');
+    groups.should.have.length(3);
+    groups[2].should.have.length(2);
+    groups[2][0].type.should.not.equal('divider');
   });
 });
