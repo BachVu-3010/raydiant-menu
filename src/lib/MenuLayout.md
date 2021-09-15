@@ -22,6 +22,15 @@ const createCategories = (extraCategories, withCalories) => {
             { name: 'Variant #2', pricing },
           ],
           calories: withCalories ? 'cal 0' : undefined,
+        },
+        {
+          name: 'Very long name item lorem ipsum dolor sit amet, consectetur i adipiscing elit',
+          description: 'Long description, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+          pricing: (priceFormatter) => priceFormatter(1),
+          variants: [
+            { name: 'Very long name variant lorem ipsum dolor sit amet, consectetur nil adipiscing elit', pricing },
+          ],
+          calories: withCalories ? 'cal 0' : undefined,
         }
       ],
       subgroups: [{

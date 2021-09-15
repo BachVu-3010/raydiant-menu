@@ -8,12 +8,12 @@ export const Name: StyledComponent<{ strikethrough?: boolean, fontSize: number }
   marginTop: 0,
   marginBottom: 0,
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   textDecoration: strikethrough ? 'line-through' : 'none',
   ...theme.itemText(fontSize),
 }));
 
-export const PriceSeparator: StyledComponent<{}> = styled('span')({ flex: 1 });
+export const PriceSeparator: StyledComponent<{}> = styled('span')({ flex: 1, margin: '0 1em' });
 
 export const Price: StyledComponent<{ fontSize: number }> = styled('span')(({ theme, fontSize }) => ({
   textAlign: 'right',
