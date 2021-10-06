@@ -55,13 +55,13 @@ describe('Layout', () => {
     const textLayout = mainLayout.find(Styles.TextLayout);
     textLayout.prop('overscan').should.eql({
       top: 56,
-      right: 16,
+      right: 32,
       bottom: 56,
-      left: 104,
+      left: 100,
     });
 
     const calculateTextLayout = textLayout.find(CalculateTextLayout);
-    calculateTextLayout.prop('width').should.equal(925);
+    calculateTextLayout.prop('width').should.equal(913);
     calculateTextLayout.prop('height').should.equal(968);
     calculateTextLayout.prop('maxColumns').should.equal(4);
     calculateTextLayout.prop('onCalculated').should.equal(onReady);
@@ -109,15 +109,15 @@ describe('Layout', () => {
 
     const textLayout = mainLayout.find(Styles.TextLayout);
     textLayout.prop('overscan').should.eql({
-      top: 16,
+      top: 32,
       right: 56,
-      bottom: 104,
+      bottom: 100,
       left: 56,
     });
 
     const calculateTextLayout = textLayout.find(CalculateTextLayout);
     calculateTextLayout.prop('width').should.equal(968);
-    calculateTextLayout.prop('height').should.equal(925);
+    calculateTextLayout.prop('height').should.equal(913);
     calculateTextLayout.prop('maxColumns').should.equal(4);
     calculateTextLayout.prop('onCalculated').should.equal(onReady);
     calculateTextLayout.prop('textSizeDependencies').should.containEql({ layoutMode: 'default', categories });

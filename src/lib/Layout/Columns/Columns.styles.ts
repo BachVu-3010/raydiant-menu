@@ -28,14 +28,16 @@ export const ColumnsWrapper: StyledComponent<{}> = styled('div')({
   // For Firefox: https://stackoverflow.com/a/44387212/1249098
   minHeight: 0,
   minWidth: 0,
+  margin: '-1em -1em 0 -1em',
 });
 
 export const ColumnItem: StyledComponent<{ columns: number, fontSize: number }> = styled('div')(({ theme, columns, fontSize }) => ({
-  width: columns ? `${100 / columns}%` : '',
-  minWidth: fontSize ? theme.vw(fontSize * MIN_CHARACTERS_PER_LINE) : '',
+  width: columns ? `calc(${100 / columns}% - 2em)` : '',
+  minWidth: fontSize
+    ? `calc(${theme.vw(fontSize * MIN_CHARACTERS_PER_LINE)} - 2em)`
+    : '',
   boxSizing: 'border-box',
-  paddingLeft: '1em',
-  paddingRight: '1em',
+  margin: '0 1em',
 }));
 
 export const Indent: StyledComponent<{ indentLevel: number }> = styled('div')(({ theme, indentLevel }) => ({

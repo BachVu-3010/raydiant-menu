@@ -18,7 +18,7 @@ describe('Image without QR', () => {
         height: 1080 - Math.round(1080 * MAX_RELATIVE_IMAGE_SIZE),
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_LARGE,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
@@ -43,7 +43,7 @@ describe('Image without QR', () => {
       },
       overscan: {
         top: OVERSCAN_SMALL,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
       },
@@ -67,7 +67,7 @@ describe('Image without QR', () => {
       },
       overscan: {
         top: OVERSCAN_SMALL,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
       },
@@ -110,7 +110,7 @@ describe('Image without QR', () => {
         height: 1920 - Math.round(1920 * MAX_RELATIVE_IMAGE_SIZE),
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -134,7 +134,7 @@ describe('Image without QR', () => {
         height: 1920 - Math.round((500 * 1080) / 1920),
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -158,7 +158,7 @@ describe('Image without QR', () => {
         width: 1080,
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -204,7 +204,7 @@ describe('Image without QR', () => {
       overscan: {
         top: OVERSCAN_SMALL,
         right: OVERSCAN_LARGE,
-        bottom: 16,
+        bottom: 32,
         left: OVERSCAN_LARGE,
       },
     });
@@ -229,7 +229,7 @@ describe('Image without QR', () => {
         top: OVERSCAN_SMALL,
         right: OVERSCAN_LARGE,
         bottom: OVERSCAN_SMALL,
-        left: 16,
+        left: 32,
       },
     });
   });
@@ -403,7 +403,7 @@ describe('Image together with QR', () => {
         height: 1080 - Math.round(1080 * MAX_RELATIVE_IMAGE_SIZE),
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_LARGE,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
@@ -428,7 +428,7 @@ describe('Image together with QR', () => {
         height: 1920 - Math.round((1080 * 1080) / 1920),
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -453,7 +453,7 @@ describe('Image together with QR', () => {
         height: 1080 - 333,
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_LARGE,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
@@ -479,7 +479,7 @@ describe('Image together with QR', () => {
       },
       overscan: {
         top: OVERSCAN_SMALL,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
       },
@@ -503,7 +503,7 @@ describe('Image together with QR', () => {
         height: 1920 - 333,
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -529,7 +529,7 @@ describe('Image together with QR', () => {
       },
       overscan: {
         top: OVERSCAN_LARGE,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
       },
@@ -553,7 +553,7 @@ describe('Image together with QR', () => {
       },
       overscan: {
         top: OVERSCAN_SMALL,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
       },
@@ -572,7 +572,7 @@ describe('Image together with QR', () => {
       },
       overscan: {
         top: OVERSCAN_SMALL,
-        right: 16,
+        right: 32,
         bottom: OVERSCAN_SMALL,
         left: OVERSCAN_LARGE,
       },
@@ -595,7 +595,7 @@ describe('Image together with QR', () => {
         height: 1920 - 875,
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
@@ -614,7 +614,7 @@ describe('Image together with QR', () => {
         height: 1920 - 667,
       },
       overscan: {
-        top: 16,
+        top: 32,
         right: OVERSCAN_SMALL,
         bottom: OVERSCAN_LARGE,
         left: OVERSCAN_SMALL,
