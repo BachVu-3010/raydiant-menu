@@ -82,7 +82,7 @@ const Layout: React.FC<LayoutProps> = ({
 
   return (
     <MenuConfigContext.Provider value={config}>
-      <Styles.Background hide={!isThumbnail && !isPlaying}>
+      <Styles.Background>
         <Styles.MainLayout isStacked={layout.isStacked} reverse={layoutMode === 'flip'}>
           <ImageLayout
             width={layout.imageSize.width}

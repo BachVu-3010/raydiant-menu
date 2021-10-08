@@ -6,8 +6,9 @@ export const HERO_IMAGE_TEXT_LENGTH = 40;
 // Image can take up to 33% of the size of its wrapper.
 export const MAX_RELATIVE_IMAGE_SIZE = 0.33;
 // Overscan padding compensation.
-export const OVERSCAN_LARGE = 104;
+export const OVERSCAN_LARGE = 100;
 export const OVERSCAN_SMALL = 56;
+export const OVERSCAN_XSMALL = 32;
 export const ASPECT_ERROR = 0.02; // 20px/1080px
 
 
@@ -102,11 +103,11 @@ export default (isLandscape: boolean, image?: ContentSize, qr?: QR, imageLayout:
   const flipped = imageLayout === 'flip';
   if (image) {
     // If the image is to the left of the text (or above in portrait)
-    // we don't need to compensate for overscan. Minimum will be set to 16
+    // we don't need to compensate for overscan. Minimum will be set to OVERSCAN_XSMALL
     if (flipped) {
-      overscanPadding[isStacked ? 'bottom' : 'left'] = 16;
+      overscanPadding[isStacked ? 'bottom' : 'left'] = OVERSCAN_XSMALL;
     } else {
-      overscanPadding[isStacked ? 'top' : 'right'] = 16;
+      overscanPadding[isStacked ? 'top' : 'right'] = OVERSCAN_XSMALL;
     }
   } else if (qr) {
     // If the qr is to the left of the text (or above in portrait)
