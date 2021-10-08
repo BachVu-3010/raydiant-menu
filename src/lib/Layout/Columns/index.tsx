@@ -38,22 +38,30 @@ const Columns: React.FC<ColumnsProps> = ({ measureRef, categories, fontSize, col
       groups = [otherGroupItems, ...otherGroups];
     }
   }
+  const hasFullWidthHeading : boolean = !!fullWidthHeading;
 
   return (
     <Styles.Wrapper ref={measureRef} fontSize={fontSize} hide={hide}>
       {fullWidthHeading}
       <Styles.ColumnsWrapper>
         {groups.map((group, groupIndex) => (
-          <Styles.ColumnItem key={groupIndex} columns={columns} fontSize={fontSize}>
-            {group.map((component, componentIndex) => {
-              const Component = componentTypes[component.type];
-              return (
-                <Styles.Indent key={componentIndex} indentLevel={component.nestedLevel}>
-                  <Component {...component.props} priceFormatter={priceFormatter} hide={hide} fontSize={fontSize} />
-                </Styles.Indent>
-              );
-            })}
-          </Styles.ColumnItem>
+          <>
+            {
+              (hasFullWidthHeading || groupIndex > 0) && group && group.length > 0 && (
+                <Styles.Spacer fontSize={fontSize} type={group[0].type} />
+              )
+            }
+            <Styles.ColumnItem key={groupIndex} columns={columns} fontSize={fontSize}>
+              {group.map((component, componentIndex) => {
+                const Component = componentTypes[component.type];
+                return (
+                  <Styles.Indent key={componentIndex} indentLevel={component.nestedLevel}>
+                    <Component {...component.props} priceFormatter={priceFormatter} hide={hide} fontSize={fontSize} />
+                  </Styles.Indent>
+                );
+              })}
+            </Styles.ColumnItem>
+          </>
         ))}
       </Styles.ColumnsWrapper>
     </Styles.Wrapper>
