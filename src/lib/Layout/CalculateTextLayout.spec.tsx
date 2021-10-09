@@ -27,7 +27,7 @@ const calculate = (dimensions: {width: number, height: number}, renderFn: React.
 
 const setupOverflow = (getFit: () => boolean) => {
   const dimensions = { width: 1920, height: 1080 };
-  const overflowDimensions = { width: 1921, height: 1181 }; // overflow when > 1920 + extra margin + 1 (eps)
+  const overflowDimensions = { width: 1921, height: 1082 }; // overflow when > 1920 + extra margin + 1 (eps)
   const element = {
     scrollWidth: overflowDimensions.width,
     scrollHeight: overflowDimensions.height,

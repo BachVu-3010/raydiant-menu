@@ -125,10 +125,10 @@ class CalculateTextLayout extends React.Component<CalculateTextLayoutProps, Calc
     const { scrollWidth, scrollHeight, clientWidth, clientHeight } = this.element;
     const fontSize = FONT_SIZES[fontSizesIndex];
 
-    // These extra sizes are because ColumnItem margin: '-1em -1em 0 -1em'
+    // These extra sizes are because ColumnItem margin: '0 -1em 0 -1em'
     const doContentsFit =
       scrollWidth <= clientWidth + 2 * fontSize + FITTING_EPS &&
-      scrollHeight <= clientHeight + fontSize + FITTING_EPS;
+      scrollHeight <= clientHeight + FITTING_EPS;
     const hasMoreFontSizesToTest = fontSizesIndex < FONT_SIZES.length - 1;
     const hasMoreColumnsToTest = columnsCount < maxColumns;
 

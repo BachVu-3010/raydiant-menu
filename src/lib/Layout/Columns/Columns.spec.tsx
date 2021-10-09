@@ -39,6 +39,10 @@ describe('Columns', () => {
     itemIndents.at(1).text().should.equal('Item2');
     itemIndents.at(2).prop('indentLevel').should.equal(0);
     itemIndents.at(2).text().should.equal('Item3');
+
+    const spacers = wrapper.find(Styles.Spacer);
+    spacers.at(0).props().should.eql({ fontSize: 20, type: 'item' });
+    spacers.at(1).props().should.eql({ fontSize: 20, type: 'item' });
   });
 
   it('should not create full width heading when the single category have no name', () => {
@@ -58,6 +62,8 @@ describe('Columns', () => {
       </ThemeProvider>
     );
     wrapper.find(CategoryHeading).exists().should.be.false();
+
+    wrapper.find(Styles.Spacer).props().should.eql({ fontSize: 20, type: 'item' });
   });
 
   it('should indent subgroups and its items', () => {
@@ -189,5 +195,33 @@ describe('Columns', () => {
     itemPrices.at(1).text().should.equal('formatted 1');
     itemPrices.at(2).text().should.equal('formatted 1.5');
     wrapper.find(VariantPrice).text().should.equal('formatted 12');
+  });
+
+  it('should render separte spacers to avoid spacing at top of each columns', () => {
+    const categories = [
+      { name: 'Category 1', items: [{ name: '1st item', pricing: () => 0 }] },
+      { name: 'Category 2', items: [{ name: '2nd item', pricing: () => 0 }] },
+      { name: 'Category 3', items: [{ name: '3rd item', pricing: () => 0 }] },
+    ];
+    const wrapper = mount(
+      <ThemeProvider theme={createTheme({}, false)}>
+        <Columns 
+          categories={categories}
+          fontSize={20}
+          columns={2}
+          wrap
+        />
+      </ThemeProvider>
+    );
+
+    const columnsWrapper = wrapper.find(Styles.ColumnsWrapper).children();
+    columnsWrapper.children().should.have.length(5);
+    columnsWrapper.children().at(0).type().should.equal(Styles.ColumnItem);
+    columnsWrapper.children().at(1).type().should.equal(Styles.Spacer);
+    columnsWrapper.children().at(1).props().should.eql({ fontSize: 20, type: 'heading' });
+    columnsWrapper.children().at(2).type().should.equal(Styles.ColumnItem);
+    columnsWrapper.children().at(3).type().should.equal(Styles.Spacer);
+    columnsWrapper.children().at(3).props().should.eql({ fontSize: 20, type: 'heading' });
+    columnsWrapper.children().at(4).type().should.equal(Styles.ColumnItem);
   });
 });

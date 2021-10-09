@@ -19,12 +19,17 @@ const CategoryHeading: React.FC<CategoryHeadingProps> = ({
   hideDescription = false,
 }) => (
   <>
-    {hideName || (
+    {hideName || !name || (
       <Styles.Heading isSubHeading={isSubHeading} fontSize={fontSize}>
         {name}
       </Styles.Heading>
     )}
-    {hideDescription || <Styles.Description fontSize={fontSize}>{description}</Styles.Description>}
+    {hideDescription || !description || (
+      <Styles.Description
+        fontSize={fontSize}
+        noTopPadding={hideName || !name}>{description}
+      </Styles.Description>
+    )}
   </>
 );
 

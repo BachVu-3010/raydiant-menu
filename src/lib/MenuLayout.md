@@ -17,10 +17,7 @@ const createCategories = (extraCategories, withCalories) => {
           name: 'first item',
           description: 'description is optional',
           pricing: (priceFormatter) => priceFormatter(1),
-          variants: [
-            { name: 'Variant #1', pricing },
-            { name: 'Variant #2', pricing },
-          ],
+          variants: Array.from(Array(40).keys()).map((idx) => ({ name: `Variant #${idx + 1}`, pricing })),
           calories: withCalories ? 'cal 0' : undefined,
         },
         {
