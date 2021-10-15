@@ -111,6 +111,7 @@ const createPresentation = (themeVars, qrActive, imageUrl, shouldFormatPrice) =>
       shouldFormatPrice: true,
       priceFormat: PRICE_FORMATS.FLOAT_2.value,
     }),
+    enableAnimation: true,
   },
   theme: themeVars,
 });

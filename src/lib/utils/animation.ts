@@ -7,19 +7,19 @@ type Animations = { [day in Animation]: (config: object) => string };
 const horizontal = ({ animationOffset, duration, timing }: { animationOffset: number, duration: number, timing: string }) => {
   const animation = keyframes({
     '0%': {
-      transform: `translateX(-${animationOffset})`,
+      backgroundPosition: `calc(50% - ${animationOffset}) 0`,
     },
 
     '10%': {
-      transform: `translateX(-${animationOffset})`,
+      backgroundPosition: `calc(50% - ${animationOffset}) 0`,
     },
 
     '90%': {
-      transform: `translateX(${animationOffset})`,
+      backgroundPosition: `calc(50% + ${animationOffset}) 0`,
     },
 
     '100%': {
-      transform: `translateX(${animationOffset})`,
+      backgroundPosition: `calc(50% + ${animationOffset}) 0`,
     },
   });
 
@@ -29,19 +29,19 @@ const horizontal = ({ animationOffset, duration, timing }: { animationOffset: nu
 const vertical = ({ animationOffset, duration, timing }: { animationOffset: number, duration: number, timing: string }) => {
   const animation = keyframes({
     '0%': {
-      transform: `translateY(-${animationOffset})`,
+      backgroundPosition: `0 calc(50% - ${animationOffset})`,
     },
 
     '10%': {
-      transform: `translateY(-${animationOffset})`,
+      backgroundPosition: `0 calc(50% - ${animationOffset})`,
     },
 
     '90%': {
-      transform: `translateY(${animationOffset})`,
+      backgroundPosition: `0 calc(50% + ${animationOffset})`,
     },
 
     '100%': {
-      transform: `translateY(${animationOffset})`,
+      backgroundPosition: `0 calc(50% + ${animationOffset})`,
     },
   });
 
@@ -53,19 +53,19 @@ const zoom = ({ delay, duration, timing }: { delay: number, duration: number, ti
   // of the animation to the starting value and the last 10% to end value
   const animation = keyframes({
     '0%': {
-      transform: 'scale(1, 1)',
+      backgroundSize: '100% 100%',
     },
 
     '10%': {
-      transform: 'scale(1, 1)',
+      backgroundSize: '100% 100%',
     },
 
     '90%': {
-      transform: `scale(1.02, 1.02)`,
+      backgroundSize: '102% 102%',
     },
 
     '100%': {
-      transform: `scale(1.02, 1.02)`,
+      backgroundSize: '102% 102%',
     },
   });
 
